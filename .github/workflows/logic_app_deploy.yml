@@ -32,8 +32,14 @@ jobs:
 
       - name: Set Logic App Name
         run: |          
-          echo "LOGIC_APP_NAME = ${{ env.LOGIC_APP_NAME }}"
-          echo "LOGIC_APP_NAME = ${{ vars.LOGIC_APP_NAME }}"
+          echo "ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/staging' && 'qa' || 'development' }}"  
+          echo "LOGIC_APP_NAME: ${{ vars.LOGIC_APP_NAME }}"  
+          echo "LOGIC_APP_PUBLISH_PROFILE: ${{ secrets.LOGIC_APP_PUBLISH_PROFILE }}"  
+          echo "DOTNET_VERSION: ${{ env.DOTNET_VERSION }}"  
+          echo "LOGIC_APP_PATH: ${{ env.LOGIC_APP_PATH }}"  
+          echo "RULE_ENGINE_PROJECT_PATH: ${{ env.RULE_ENGINE_PROJECT_PATH }}"  
+          echo "RULE_ENGINE_PROJECT_FILE: ${{ env.RULE_ENGINE_PROJECT_FILE }}"  
+          echo "AZURE_FUNCTIONAPP_PACKAGE_PATH: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"  
 
       - name: Set AZURE Logic APP PUBLISH PROFILE
         run: echo "LOGIC_APP_PUBLISH_PROFILE=${{ secrets.LOGIC_APP_PUBLISH_PROFILE }}" >> $GITHUB_ENV
