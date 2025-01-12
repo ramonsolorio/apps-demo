@@ -14,6 +14,7 @@ env:
   RULE_ENGINE_PROJECT_PATH: "src/WF_PRM_PromoWorkspace/Function"
   RULE_ENGINE_PROJECT_FILE: "WF_PRM_PromoFunction.csproj"
   AZURE_FUNCTIONAPP_PACKAGE_PATH: "./publish"
+  LOGIC_APP_NAME: ${{ vars.LOGIC_APP_NAME }} 
 
 jobs:
   deploy:
@@ -30,7 +31,9 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Set Logic App Name
-        run: echo "LOGIC_APP_NAME=${{ vars.LOGIC_APP_NAME }}" >> $GITHUB_ENV
+        run: |          
+          echo "LOGIC_APP_NAME = ${{ env.LOGIC_APP_NAME }}"
+          echo "LOGIC_APP_NAME = ${{ vars.LOGIC_APP_NAME }}"
 
       - name: Set AZURE Logic APP PUBLISH PROFILE
         run: echo "LOGIC_APP_PUBLISH_PROFILE=${{ secrets.LOGIC_APP_PUBLISH_PROFILE }}" >> $GITHUB_ENV
