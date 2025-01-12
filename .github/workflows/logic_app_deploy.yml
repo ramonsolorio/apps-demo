@@ -1,0 +1,59 @@
+name: Deploy Logic App and Rule Engine
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+  workflow_dispatch:
+
+env:
+  ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'PROD' || github.ref == 'refs/heads/staging' && 'QA' || 'DEV' }}
+  DOTNET_VERSION: "8.0.x"
+  LOGIC_APP_PATH: "src/WF_PRM_PromoWorkspace/LogicApp"
+  RULE_ENGINE_PROJECT_PATH: "src/WF_PRM_PromoWorkspace/Function"
+  RULE_ENGINE_PROJECT_FILE: "WF_PRM_PromoFunction.csproj"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./publish"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set Logic App Name
+        run: echo "LOGIC_APP_NAME=${{ vars[format('{0}_LOGIC_APP_NAME', env.ENVIRONMENT)] }}" >> $GITHUB_ENV
+
+      - name: Set AZURE Logic APP PUBLISH PROFILE
+        run: echo "LOGIC_APP_PUBLISH_PROFILE=${{ secrets[format('{0}_LOGIC_APP_PUBLISH_PROFILE', env.ENVIRONMENT)] }}" >> $GITHUB_ENV
+
+      - name: Install dependencies for Rule Engine
+        run: dotnet restore ${{ env.RULE_ENGINE_PROJECT_PATH }}/${{ env.RULE_ENGINE_PROJECT_FILE }}
+
+      - name: Build Rule Engine
+        run: dotnet build ${{ env.RULE_ENGINE_PROJECT_PATH }}/${{ env.RULE_ENGINE_PROJECT_FILE }} --configuration Release
+
+      - name: Publish Rule Engine
+        run: dotnet publish ${{ env.RULE_ENGINE_PROJECT_PATH }}/${{ env.RULE_ENGINE_PROJECT_FILE }} --configuration Release --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+
+      # - name: Deploy Rule Engine to Azure Function App
+      #   uses: Azure/functions-action@v1
+      #   with:
+      #     app-name: ${{ secrets.DEV_RULE_FUNCTION_APP_NAME }}
+      #     package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+      #     publish-profile: ${{ secrets.DEV_RULE_FUNCTION_APP_PUBLISH_PROFILE }}
+
+      - name: Deploy Logic App definition
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars[format('{0}_LOGIC_APP_NAME', env.ENVIRONMENT)] }}
+          package: ${{ env.LOGIC_APP_PATH }}
+          publish-profile: ${{ secrets[format('{0}_LOGIC_APP_PUBLISH_PROFILE', env.ENVIRONMENT)] }}

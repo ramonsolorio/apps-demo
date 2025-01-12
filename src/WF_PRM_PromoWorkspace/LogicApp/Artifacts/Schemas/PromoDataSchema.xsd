@@ -1,0 +1,89 @@
+﻿<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="PromotionBatch">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="organizationCountry" nillable="true"/>
+        <xs:element type="xs:string" name="organizationName" nillable="true"/>
+        <xs:element type="xs:string" name="businessName" nillable="true"/>
+        <xs:element type="xs:string" name="departmentId" nillable="true"/>
+        <xs:element type="xs:string" name="storeId" nillable="true"/>
+        <xs:element type="xs:string" name="numberOfRecords" nillable="true"/>
+        <xs:element type="xs:string" name="searchId" nillable="true"/>
+        <xs:element type="xs:string" name="searchDate" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_CR" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_CR_DESC" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_CR_SUPERIOR" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_CR_TYPE" nillable="true"/>
+        <xs:element type="xs:string" name="ESTADO" nillable="true"/>
+        <xs:element type="xs:string" name="RETEK_CR" nillable="true"/>
+        <xs:element type="xs:string" name="CR_FLEX_VALUE_ID" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_EF" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_EF_DESC" nillable="true"/>
+        <xs:element type="xs:string" name="EF_FLEX_VALUE_ID" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_CIA" nillable="true"/>
+        <xs:element type="xs:string" name="ORACLE_CIA_DESC" nillable="true"/>
+        <xs:element type="xs:string" name="CIA_FLEX_VALUE_ID" nillable="true"/>
+        <xs:element type="xs:string" name="ID_ESTADO_FINANCIERO" nillable="true"/>
+        <xs:element type="xs:string" name="ID_CENTRO_RESPONSABILIDAD" nillable="true"/>
+        <xs:element type="xs:string" name="ID_COMPANIA" nillable="true"/>
+        <xs:element type="xs:string" name="LEGACY_EF" nillable="true"/>
+        <xs:element type="xs:string" name="LEGACY_CR" nillable="true"/>
+        <xs:element name="Promotions" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PromotionData" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="lineNumber" nillable="true"/>
+                    <xs:element type="xs:string" name="folio" nillable="true"/>
+                    <xs:element type="xs:string" name="itemCategory" nillable="true"/>
+                    <xs:element type="xs:string" name="type" nillable="true"/>
+                    <xs:element type="xs:string" name="startDate" nillable="true"/>
+                    <xs:element type="xs:string" name="endDate" nillable="true"/>
+                    <xs:element type="xs:string" name="itemSku" nillable="true"/>
+                    <xs:element type="xs:string" name="category" nillable="true"/>
+                    <xs:element type="xs:string" name="providerType" nillable="true"/>
+                    <xs:element type="xs:string" name="requiredQuantity" nillable="true"/>
+                    <xs:element type="xs:string" name="discount" nillable="true"/>
+                    <xs:element type="xs:string" name="discountType" nillable="true"/>
+                    <xs:element type="xs:string" name="optative" nillable="true"/>
+                    <xs:element type="xs:string" name="description" nillable="true"/>
+                    <xs:element type="xs:string" name="itemSubcategory" nillable="true"/>
+                    <xs:element type="xs:string" name="itemSegment" nillable="true"/>
+                    <xs:element type="xs:string" name="itemSubsegment" nillable="true"/>
+                    <xs:element type="xs:string" name="durationCode" nillable="true"/>
+                    <xs:element type="xs:string" name="grouper" nillable="true"/>
+                    <xs:element type="xs:string" name="percent" nillable="true"/>
+                    <xs:element type="xs:string" name="optativeOne" nillable="true"/>
+                    <xs:element type="xs:string" name="sent" nillable="true"/>
+                    <xs:element type="xs:string" name="action" nillable="true"/>
+                    <xs:element type="xs:string" name="binCode" nillable="true"/>
+                    <xs:element type="xs:string" name="messagePsg" nillable="true"/>
+                    <xs:element type="xs:string" name="tranType" nillable="true"/>
+                    <xs:element type="xs:string" name="promTranType" nillable="true"/>
+                    <xs:element type="xs:string" name="thresHold_no" nillable="true"/>
+                    <xs:element type="xs:string" name="thresHoldAmt" nillable="true"/>
+                    <xs:element type="xs:string" name="newPrice" nillable="true"/>
+                    <xs:element type="xs:string" name="discountAmt" nillable="true"/>
+                    <xs:element type="xs:string" name="newSellingUom" nillable="true"/>
+                    <xs:element type="xs:string" name="dept" nillable="true"/>
+                    <xs:element type="xs:string" name="class" nillable="true"/>
+                    <xs:element type="xs:string" name="subClass" nillable="true"/>
+                    <xs:element type="xs:string" name="refPrefix" nillable="true"/>
+                    <xs:element type="xs:string" name="prefix" nillable="true"/>
+                    <xs:element type="xs:string" name="manualPriceEntry" nillable="true"/>
+                    <xs:element type="xs:string" name="msgPos" nillable="true"/>
+                    <xs:element type="xs:string" name="startTime" nillable="true"/>
+                    <xs:element type="xs:string" name="endTime" nillable="true"/>
+                    <xs:element type="xs:string" name="shortDesc" nillable="true"/>
+                    <xs:element type="xs:string" name="promBinCode" nillable="true"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

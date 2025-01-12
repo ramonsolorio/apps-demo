@@ -1,0 +1,72 @@
+name: Ejecucion CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "main"
+      - "staging"
+      - "develop"
+env:
+  ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'PROD' || github.ref == 'refs/heads/staging' && 'QA' || 'DEV' }}
+  DOTNET_VERSION: "8.0.x"
+  LOGIC_APP_PATH: "src/WF_PRM_PromoWorkspace/LogicApp"
+  RULE_ENGINE_PROJECT_PATH: "src/WF_PRM_PromoWorkspace/Function"
+  RULE_ENGINE_PROJECT_FILE: "WF_PRM_PromoFunction.csproj"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./publish"
+  PACKAGE_PATH: "src/AzureFunctions/OxxoPromotionFunctionApp"
+  PROJECT_FILE: "OxxoPromotionFunctionApp.csproj"  
+jobs:
+  build-logic-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub checkout
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set Logic App Name
+        run: echo "LOGIC_APP_NAME=${{ vars[format('{0}_LOGIC_APP_NAME', env.ENVIRONMENT)] }}" >> $GITHUB_ENV
+
+      - name: Set AZURE Logic APP PUBLISH PROFILE
+        run: echo "LOGIC_APP_PUBLISH_PROFILE=${{ secrets[format('{0}_LOGIC_APP_PUBLISH_PROFILE', env.ENVIRONMENT)] }}" >> $GITHUB_ENV
+
+      - name: Install dependencies for Rule Engine
+        run: dotnet restore ${{ env.RULE_ENGINE_PROJECT_PATH }}/${{ env.RULE_ENGINE_PROJECT_FILE }}
+
+      - name: Build Rule Engine
+        run: dotnet build ${{ env.RULE_ENGINE_PROJECT_PATH }}/${{ env.RULE_ENGINE_PROJECT_FILE }} --configuration Release
+
+  build-function-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub checkout
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+      
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore ${{ env.PACKAGE_PATH }}/${{ env.PROJECT_FILE }}
+
+      - name: Build project
+        run: dotnet build ${{ env.PACKAGE_PATH }}/${{ env.PROJECT_FILE }} --configuration Release
+  
+  security-check:
+    uses: BUS-Digital/DIG_GTH_ACT_PIPELINE/.github/workflows/checkmarx-workflow.yml@main
+    needs: [build-logic-app, build-function-app]
+    with:
+      tags: "DevSecOps,Journey3.0,DIG_APP_PRM_ERDD,Movilidad,Bus-Digital"
+      threshold: "sast-critical=1;sast-high=1;sca-critical=1;sca-high=1"
+    secrets:
+      cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+      cx_client_secret: ${{ secrets.CX_CLIENT_SECRET}}

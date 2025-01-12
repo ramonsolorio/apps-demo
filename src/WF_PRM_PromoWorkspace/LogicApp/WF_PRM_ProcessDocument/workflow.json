@@ -1,0 +1,1120 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Parse_SB_Message_JSON": {
+                "type": "ParseJson",
+                "inputs": {
+                    "content": "@triggerBody()?['contentData']",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "BATCH_ID": {
+                                "type": "string"
+                            },
+                            "LOAD_BATCH_ID": {
+                                "type": "string"
+                            },
+                            "LOCATION": {
+                                "type": "string"
+                            },
+                            "LOAD_WEEK": {
+                                "type": "string"
+                            },
+                            "RUN_IDENTIFIER": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "runAfter": {}
+            },
+            "Create_UNIQUE_IDENTIFIER": {
+                "type": "Compose",
+                "inputs": "@guid()",
+                "runAfter": {
+                    "Parse_SB_Message_JSON": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Scope_Generate_XML_for_BRE": {
+                "type": "Scope",
+                "actions": {
+                    "Execute_stored_procedure_GetPromotionDataAsXml": {
+                        "type": "ServiceProvider",
+                        "inputs": {
+                            "parameters": {
+                                "storedProcedureName": "SP_GET_PROMOTION_DATA_XML",
+                                "storedProcedureParameters": {
+                                    "BatchID": "@{body('Parse_SB_Message_JSON')?['BATCH_ID']}",
+                                    "Location": "@{body('Parse_SB_Message_JSON')?['LOCATION']}",
+                                    "LoadBatchID": "@{body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']}",
+                                    "LOAD_WEEK": "@{body('Parse_SB_Message_JSON')?['LOAD_WEEK']}"
+                                },
+                                "includeEmptyResultSets": true
+                            },
+                            "serviceProviderConfiguration": {
+                                "connectionName": "sql",
+                                "operationId": "executeStoredProcedure",
+                                "serviceProviderId": "/serviceProviders/sql"
+                            }
+                        },
+                        "runAfter": {
+                            "Create_log_entry_in_STS": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    },
+                    "Create_log_entry_in_STS": {
+                        "type": "ServiceProvider",
+                        "inputs": {
+                            "parameters": {
+                                "query": "INSERT INTO [dbo].[CO_PRM_DCM_STS]\n           ([UNIQUE_IDENTIFIER]\n           ,[RUN_IDENTIFIER]\n           ,[PROCESSING_STATUS]\n           ,[CLOUD_PRM_STATUS]\n           ,[BATCH_ID]\n           ,[LOCATION]\n           ,[STORE]\n           ,[LOAD_WEEK]\n           ,[LOAD_BATCH_ID]\n           ,[DOCUMENT_PROCESSING_START_TIME]\n           ,[TRANSFORMATION_START_TIME])\n     VALUES\n           ('@{outputs('Create_UNIQUE_IDENTIFIER')}',\n           '@{body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']}',\n           'P',\n           'P',\n           '@{body('Parse_SB_Message_JSON')?['BATCH_ID']}',\n           '@{body('Parse_SB_Message_JSON')?['LOCATION']}',\n           '@{body('Parse_SB_Message_JSON')?['LOCATION']}',\n           '@{body('Parse_SB_Message_JSON')?['LOAD_WEEK']}',\n           '@{body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']}',\n           '@{utcNow()}',\n           '@{utcNow()}')"
+                            },
+                            "serviceProviderConfiguration": {
+                                "connectionName": "sql",
+                                "operationId": "executeQuery",
+                                "serviceProviderId": "/serviceProviders/sql"
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Abandon_the_message_in_a_queue_XML_for_BRE-copy": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Scope_BRE": {
+                "type": "Scope",
+                "actions": {
+                    "Call_a_local_rules_function_in_this_logic_app_BRE": {
+                        "type": "InvokeFunction",
+                        "inputs": {
+                            "functionName": "WF_PRM_PromoFunction",
+                            "parameters": {
+                                "ruleSetName": "PrmRulesSet",
+                                "documentType": "PromoDataSchema",
+                                "inputXml": "@body('Execute_stored_procedure_GetPromotionDataAsXml')?['resultSets'][0][0]['Column1']"
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Scope_Generate_XML_for_BRE": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Scope_Transform": {
+                "type": "Scope",
+                "actions": {
+                    "XML_parse_BRE_output": {
+                        "type": "XmlParse",
+                        "inputs": {
+                            "content": "@body('Call_a_local_rules_function_in_this_logic_app_BRE')?['XmlDoc']",
+                            "schema": {
+                                "source": "LogicApp",
+                                "name": "PromoDataSchema.xsd"
+                            },
+                            "xmlReaderSettings": {
+                                "dtdProcessing": "Prohibit",
+                                "xmlNormalization": true,
+                                "ignoreWhitespace": true,
+                                "ignoreProcessingInstructions": true
+                            },
+                            "jsonWriterSettings": {
+                                "ignoreAttributes": true,
+                                "useFullyQualifiedNames": false
+                            },
+                            "rootNodeQualifiedName": "PromotionBatch"
+                        }
+                    },
+                    "Parse_Promo_JSON_from_BRE": {
+                        "type": "ParseJson",
+                        "inputs": {
+                            "content": "@body('XML_parse_BRE_output')",
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "json": {
+                                        "type": "object",
+                                        "properties": {
+                                            "RUN_IDENTIFIER": {
+                                                "type": "string"
+                                            },
+                                            "UNIQUE_IDENTIFIER": {
+                                                "type": "string"
+                                            },
+                                            "organizationCountry": {
+                                                "type": "string"
+                                            },
+                                            "organizationName": {
+                                                "type": "string"
+                                            },
+                                            "businessName": {
+                                                "type": "string"
+                                            },
+                                            "departmentId": {
+                                                "type": "string"
+                                            },
+                                            "storeId": {
+                                                "type": "string"
+                                            },
+                                            "numberOfRecords": {
+                                                "type": "string"
+                                            },
+                                            "searchId": {
+                                                "type": "string"
+                                            },
+                                            "searchDate": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_CR": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_CR_DESC": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_CR_SUPERIOR": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_CR_TYPE": {
+                                                "type": "string"
+                                            },
+                                            "ESTADO": {
+                                                "type": "string"
+                                            },
+                                            "RETEK_CR": {
+                                                "type": "string"
+                                            },
+                                            "CR_FLEX_VALUE_ID": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_EF": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_EF_DESC": {
+                                                "type": "string"
+                                            },
+                                            "EF_FLEX_VALUE_ID": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_CIA": {
+                                                "type": "string"
+                                            },
+                                            "ORACLE_CIA_DESC": {
+                                                "type": "string"
+                                            },
+                                            "CIA_FLEX_VALUE_ID": {
+                                                "type": "string"
+                                            },
+                                            "ID_ESTADO_FINANCIERO": {
+                                                "type": "string"
+                                            },
+                                            "ID_CENTRO_RESPONSABILIDAD": {
+                                                "type": "string"
+                                            },
+                                            "ID_COMPANIA": {
+                                                "type": "string"
+                                            },
+                                            "LEGACY_EF": {
+                                                "type": "string"
+                                            },
+                                            "LEGACY_CR": {
+                                                "type": "string"
+                                            },
+                                            "Promotions": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "lineNumber": {
+                                                                "type": "string"
+                                                            },
+                                                            "folio": {
+                                                                "type": "string"
+                                                            },
+                                                            "itemCategory": {
+                                                                "type": "string"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            },
+                                                            "startDate": {
+                                                                "type": "string"
+                                                            },
+                                                            "endDate": {
+                                                                "type": "string"
+                                                            },
+                                                            "itemSku": {
+                                                                "type": "string"
+                                                            },
+                                                            "category": {
+                                                                "type": "string"
+                                                            },
+                                                            "providerType": {
+                                                                "type": "string"
+                                                            },
+                                                            "requiredQuantity": {
+                                                                "type": "string"
+                                                            },
+                                                            "discount": {
+                                                                "type": "string"
+                                                            },
+                                                            "discountType": {
+                                                                "type": "string"
+                                                            },
+                                                            "optative": {
+                                                                "type": "string"
+                                                            },
+                                                            "description": {
+                                                                "type": "string"
+                                                            },
+                                                            "itemSubcategory": {
+                                                                "type": "string"
+                                                            },
+                                                            "itemSegment": {
+                                                                "type": "string"
+                                                            },
+                                                            "itemSubsegment": {
+                                                                "type": "string"
+                                                            },
+                                                            "durationCode": {
+                                                                "type": "string"
+                                                            },
+                                                            "grouper": {
+                                                                "type": "string"
+                                                            },
+                                                            "percent": {
+                                                                "type": "string"
+                                                            },
+                                                            "optativeOne": {
+                                                                "type": "string"
+                                                            },
+                                                            "sent": {
+                                                                "type": "string"
+                                                            },
+                                                            "action": {
+                                                                "type": "string"
+                                                            },
+                                                            "binCode": {
+                                                                "type": "string"
+                                                            },
+                                                            "messagePsg": {
+                                                                "type": "string"
+                                                            },
+                                                            "tranType": {
+                                                                "type": "string"
+                                                            },
+                                                            "promTranType": {
+                                                                "type": "string"
+                                                            },
+                                                            "thresHold_no": {
+                                                                "type": "string"
+                                                            },
+                                                            "thresHoldAmt": {
+                                                                "type": "string"
+                                                            },
+                                                            "newPrice": {
+                                                                "type": "string"
+                                                            },
+                                                            "discountAmt": {
+                                                                "type": "string"
+                                                            },
+                                                            "newSellingUom": {
+                                                                "type": "string"
+                                                            },
+                                                            "dept": {
+                                                                "type": "string"
+                                                            },
+                                                            "class": {
+                                                                "type": "string"
+                                                            },
+                                                            "subClass": {
+                                                                "type": "string"
+                                                            },
+                                                            "refPrefix": {
+                                                                "type": "string"
+                                                            },
+                                                            "prefix": {
+                                                                "type": "string"
+                                                            },
+                                                            "manualPriceEntry": {
+                                                                "type": "string"
+                                                            },
+                                                            "msgPos": {
+                                                                "type": "string"
+                                                            },
+                                                            "startTime": {
+                                                                "type": "string"
+                                                            },
+                                                            "endTime": {
+                                                                "type": "string"
+                                                            },
+                                                            "shortDesc": {
+                                                                "type": "string"
+                                                            },
+                                                            "promBinCode": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "lineNumber",
+                                                            "folio",
+                                                            "itemCategory",
+                                                            "type",
+                                                            "startDate",
+                                                            "endDate",
+                                                            "itemSku",
+                                                            "category",
+                                                            "providerType",
+                                                            "requiredQuantity",
+                                                            "discount",
+                                                            "discountType",
+                                                            "optative",
+                                                            "description",
+                                                            "itemSubcategory",
+                                                            "itemSegment",
+                                                            "itemSubsegment",
+                                                            "durationCode",
+                                                            "grouper",
+                                                            "percent",
+                                                            "optativeOne",
+                                                            "sent",
+                                                            "action",
+                                                            "binCode",
+                                                            "messagePsg",
+                                                            "tranType",
+                                                            "promTranType",
+                                                            "thresHold_no",
+                                                            "thresHoldAmt",
+                                                            "newPrice",
+                                                            "discountAmt",
+                                                            "newSellingUom",
+                                                            "dept",
+                                                            "class",
+                                                            "subClass",
+                                                            "refPrefix",
+                                                            "prefix",
+                                                            "manualPriceEntry",
+                                                            "msgPos",
+                                                            "startTime",
+                                                            "endTime",
+                                                            "shortDesc",
+                                                            "promBinCode"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "XML_parse_BRE_output": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    },
+                    "Transform_JSON_To_JSON": {
+                        "type": "Liquid",
+                        "kind": "JsonToJson",
+                        "inputs": {
+                            "content": "@body('Parse_Promo_JSON_from_BRE')?['Json']",
+                            "map": {
+                                "source": "LogicApp",
+                                "name": "WF_MAP_CleanJson.liquid"
+                            }
+                        },
+                        "runAfter": {
+                            "Parse_Promo_JSON_from_BRE": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Scope_BRE": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Create_Filename": {
+                "type": "Compose",
+                "inputs": "PRM@{concat(body('Parse_Promo_JSON_from_BRE')?['json']?['departmentId'],body('Parse_Promo_JSON_from_BRE')?['json']?['storeId'])}@{formatDateTime(utcNow(), 'yyMMddHHmmss')}_@{outputs('Create_UNIQUE_IDENTIFIER')}.json",
+                "runAfter": {
+                    "Scope_Transform": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Scope_Get_Store_Data": {
+                "type": "Scope",
+                "actions": {
+                    "Get_Store_Data_Query": {
+                        "type": "ServiceProvider",
+                        "inputs": {
+                            "parameters": {
+                                "query": "SELECT [DIGITAL] FROM [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_STR_DCM_CFG] WHERE STORE='@{body('XML_parse_BRE_output')?['json']?['storeId']}'"
+                            },
+                            "serviceProviderConfiguration": {
+                                "connectionName": "sql",
+                                "operationId": "executeQuery",
+                                "serviceProviderId": "/serviceProviders/sql"
+                            }
+                        }
+                    },
+                    "Parse_Get_Store_Response": {
+                        "type": "ParseJson",
+                        "inputs": {
+                            "content": "@body('Get_Store_Data_Query')[0][0]",
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "DIGITAL": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Get_Store_Data_Query": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Create_Filename": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Scope_deliver_doc": {
+                "type": "Scope",
+                "actions": {
+                    "Is_Digital_Store": {
+                        "type": "If",
+                        "expression": {
+                            "and": [
+                                {
+                                    "equals": [
+                                        "@body('Parse_Get_Store_Response')?['DIGITAL']",
+                                        "Y"
+                                    ]
+                                }
+                            ]
+                        },
+                        "actions": {
+                            "Upload_blob_to_storage_container": {
+                                "type": "ServiceProvider",
+                                "inputs": {
+                                    "parameters": {
+                                        "containerName": "ct-json-mappedjsonstorepromotiondata",
+                                        "blobName": "@outputs('Create_Filename')",
+                                        "content": "@body('Transform_JSON_To_JSON')"
+                                    },
+                                    "serviceProviderConfiguration": {
+                                        "connectionName": "AzureBlob",
+                                        "operationId": "uploadBlob",
+                                        "serviceProviderId": "/serviceProviders/AzureBlob"
+                                    }
+                                }
+                            },
+                            "Upload_blob_response": {
+                                "type": "Compose",
+                                "inputs": "@body('Upload_blob_to_storage_container')?['properties']?['blobFullPathWithContainer']",
+                                "runAfter": {
+                                    "Upload_blob_to_storage_container": [
+                                        "SUCCEEDED"
+                                    ]
+                                }
+                            }
+                        },
+                        "else": {
+                            "actions": {
+                                "Insert_promo_head": {
+                                    "type": "ServiceProvider",
+                                    "inputs": {
+                                        "parameters": {
+                                            "tableName": "[dbo].[CO_PRM_HEADP]",
+                                            "setColumns": {
+                                                "SND_PRM": "RETEK",
+                                                "DST_PRM": "POS",
+                                                "ID_RCVR": "@{body('Parse_Promo_JSON_from_BRE')?['json']?['RUN_IDENTIFIER']}",
+                                                "CY_PRM": "@{body('Parse_Promo_JSON_from_BRE')?['json']?['organizationCountry']}",
+                                                "NM_ORGN": "@{body('Parse_Promo_JSON_from_BRE')?['json']?['organizationName']}",
+                                                "ID_DEPT": "@{body('Parse_Promo_JSON_from_BRE')?['json']?['departmentId']}",
+                                                "ID_STR": "@{body('Parse_Promo_JSON_from_BRE')?['json']?['storeId']}",
+                                                "NMB_PRM": "@{body('Parse_Promo_JSON_from_BRE')?['json']?['numberOfRecords']}",
+                                                "ID_SCH": "@{body('Parse_Promo_JSON_from_BRE')?['json']?['searchId']}",
+                                                "DT_SCH": "@{coalesce(body('Parse_Promo_JSON_from_BRE')?['json']?['searchDate'], '')}"
+                                            }
+                                        },
+                                        "serviceProviderConfiguration": {
+                                            "connectionName": "sql",
+                                            "operationId": "insertRow",
+                                            "serviceProviderId": "/serviceProviders/sql"
+                                        }
+                                    }
+                                },
+                                "Parse_Insert_Row_Response_JSON": {
+                                    "type": "ParseJson",
+                                    "inputs": {
+                                        "content": "@body('Insert_promo_head')",
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ID_PRM_HDR_OX": {
+                                                    "type": "integer"
+                                                },
+                                                "CY_PRM": {
+                                                    "type": "string"
+                                                },
+                                                "NM_ORGN": {
+                                                    "type": "string"
+                                                },
+                                                "NM_CMY": {},
+                                                "ID_DEPT": {
+                                                    "type": "string"
+                                                },
+                                                "ID_STR": {
+                                                    "type": "string"
+                                                },
+                                                "NMB_PRM": {
+                                                    "type": "integer"
+                                                },
+                                                "ID_SCH": {
+                                                    "type": "string"
+                                                },
+                                                "SND_PRM": {
+                                                    "type": "string"
+                                                },
+                                                "DST_PRM": {
+                                                    "type": "string"
+                                                },
+                                                "ID_RCVR": {
+                                                    "type": "string"
+                                                },
+                                                "DT_SCH": {
+                                                    "type": "string"
+                                                },
+                                                "DT_CRT_PRM": {
+                                                    "type": "string"
+                                                },
+                                                "STS_PRM": {},
+                                                "FL": {},
+                                                "LCNT": {},
+                                                "ID_OPR_CRT": {},
+                                                "TM_CRT": {},
+                                                "ID_OPR_MDY": {},
+                                                "TM_MDY": {}
+                                            }
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "Insert_promo_head": [
+                                            "SUCCEEDED"
+                                        ]
+                                    }
+                                },
+                                "Execute_SP_insert_promo_details": {
+                                    "type": "ServiceProvider",
+                                    "inputs": {
+                                        "parameters": {
+                                            "storedProcedureName": "SP_INSERT_PROMOTION_DATA_INTO_PROMOTION_DETAILS",
+                                            "storedProcedureParameters": {
+                                                "PromotionJson": "@{body('Transform_JSON_To_JSON')}",
+                                                "ForeignKeyId": "@{body('Parse_Insert_Row_Response_JSON')?['ID_PRM_HDR_OX']}"
+                                            },
+                                            "includeEmptyResultSets": true
+                                        },
+                                        "serviceProviderConfiguration": {
+                                            "connectionName": "sql",
+                                            "operationId": "executeStoredProcedure",
+                                            "serviceProviderId": "/serviceProviders/sql"
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "Parse_Insert_Row_Response_JSON": [
+                                            "SUCCEEDED"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Update_status_in_STS": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    },
+                    "Update_status_in_STS": {
+                        "type": "ServiceProvider",
+                        "inputs": {
+                            "parameters": {
+                                "query": "UPDATE [dbo].[CO_PRM_DCM_STS]\nSET [NUMBER_OF_RECORDS] = '@{body('Parse_Promo_JSON_from_BRE')?['json']?['numberOfRecords']}', [PV_DOC_NAME] = '@{outputs('Create_Filename')}', [CR_PLAZA] = '@{body('Parse_Promo_JSON_from_BRE')?['json']?['ORACLE_CR_SUPERIOR']}', [CR_TIENDA] = '@{body('Parse_Promo_JSON_from_BRE')?['json']?['ORACLE_CR']}', [SOURCE] = 'POS', [PV_DOC_TYPE] = 'PRM'\nWHERE [UNIQUE_IDENTIFIER] = '@{outputs('Create_UNIQUE_IDENTIFIER')}'"
+                            },
+                            "serviceProviderConfiguration": {
+                                "connectionName": "sql",
+                                "operationId": "executeQuery",
+                                "serviceProviderId": "/serviceProviders/sql"
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Scope_Get_Store_Data": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Update_status_in_STS_to_F_Delivery_failure": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [dbo].[CO_PRM_DCM_STS]\nSET [PROCESSING_STATUS] = 'F', [CLOUD_PRM_STATUS] = 'F', [TRANSFORMATION_END_TIME] = '@{utcNow()}', [DOCUMENT_PROCESSING_END_TIME] = '@{utcNow()}'\nWHERE [UNIQUE_IDENTIFIER] = '@{outputs('Create_UNIQUE_IDENTIFIER')}'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Scope_deliver_doc": [
+                        "FAILED",
+                        "SKIPPED",
+                        "TIMEDOUT"
+                    ]
+                }
+            },
+            "Terminate_XML_for_BRE": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Failed",
+                    "runError": {
+                        "message": "Error generating XML for BRE"
+                    }
+                },
+                "runAfter": {
+                    "Invoke_process_Notifications_workflow_with_state_F_XML_for_BRE": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Update_status_in_STS_to_F_XML_for_BRE": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [dbo].[CO_PRM_DCM_STS]\nSET [PROCESSING_STATUS] = 'F', [CLOUD_PRM_STATUS] = 'F', [TRANSFORMATION_END_TIME] = '@{utcNow()}', [DOCUMENT_PROCESSING_END_TIME] = '@{utcNow()}'\nWHERE [UNIQUE_IDENTIFIER] = '@{outputs('Create_UNIQUE_IDENTIFIER')}'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Scope_Generate_XML_for_BRE": [
+                        "TIMEDOUT",
+                        "SKIPPED",
+                        "FAILED"
+                    ]
+                }
+            },
+            "Update_status_in_STS_to_F_BRE": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [dbo].[CO_PRM_DCM_STS]\nSET [PROCESSING_STATUS] = 'F', [CLOUD_PRM_STATUS] = 'F', [TRANSFORMATION_END_TIME] = '@{utcNow()}', [DOCUMENT_PROCESSING_END_TIME] = '@{utcNow()}'\nWHERE [UNIQUE_IDENTIFIER] = '@{outputs('Create_UNIQUE_IDENTIFIER')}'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Scope_BRE": [
+                        "FAILED",
+                        "SKIPPED",
+                        "TIMEDOUT"
+                    ]
+                }
+            },
+            "Terminate_Transform": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Failed",
+                    "runError": {
+                        "message": "Error during transformation"
+                    }
+                },
+                "runAfter": {
+                    "Invoke_process_Notifications_workflow_with_state_F_Transform": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Update_status_in_STS_to_F_Transform": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [dbo].[CO_PRM_DCM_STS]\nSET [PROCESSING_STATUS] = 'F', [CLOUD_PRM_STATUS] = 'F', [TRANSFORMATION_END_TIME] = '@{utcNow()}', [DOCUMENT_PROCESSING_END_TIME] = '@{utcNow()}'\nWHERE [UNIQUE_IDENTIFIER] = '@{outputs('Create_UNIQUE_IDENTIFIER')}'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Scope_Transform": [
+                        "FAILED",
+                        "SKIPPED",
+                        "TIMEDOUT"
+                    ]
+                }
+            },
+            "Update_status_in_STS_to_F_Get_store_data": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [dbo].[CO_PRM_DCM_STS]\nSET [PROCESSING_STATUS] = 'F', [CLOUD_PRM_STATUS] = 'F', [TRANSFORMATION_END_TIME] = '@{utcNow()}', [DOCUMENT_PROCESSING_END_TIME] = '@{utcNow()}'\nWHERE [UNIQUE_IDENTIFIER] = '@{outputs('Create_UNIQUE_IDENTIFIER')}'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Scope_Get_Store_Data": [
+                        "FAILED",
+                        "SKIPPED",
+                        "TIMEDOUT"
+                    ]
+                }
+            },
+            "Terminate": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Succeeded"
+                },
+                "runAfter": {
+                    "Condition_P_less_than_2": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Terminate_Delivery_failure": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Failed",
+                    "runError": {
+                        "message": "Delivery failure"
+                    }
+                },
+                "runAfter": {
+                    "Invoke_process_Notifications_workflow_with_state_F_Delivery_Failure": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Abandon_the_message_in_a_queue_XML_for_BRE-copy": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "queueName": "sb_qe_prm_processcontrol",
+                        "lockToken": "@triggerBody()?['lockToken']"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "serviceBus",
+                        "operationId": "completeQueueMessageV2",
+                        "serviceProviderId": "/serviceProviders/serviceBus"
+                    }
+                },
+                "runAfter": {
+                    "Create_UNIQUE_IDENTIFIER": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Invoke_process_Notifications_workflow_with_state_F_Delivery_Failure": {
+                "type": "Workflow",
+                "inputs": {
+                    "host": {
+                        "workflow": {
+                            "id": "WF_PRM_ProcessNotifications"
+                        }
+                    },
+                    "body": {
+                        "BATCH_ID": "@body('Parse_SB_Message_JSON')?['BATCH_ID']",
+                        "LOAD_BATCH_ID": "@body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']",
+                        "LOCATION": "@body('Parse_SB_Message_JSON')?['LOCATION']",
+                        "LOAD_WEEK": "@body('Parse_SB_Message_JSON')?['LOAD_WEEK']",
+                        "RUN_IDENTIFIER": "@body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']",
+                        "UNIQUE_IDENTIFIER": "@outputs('Create_UNIQUE_IDENTIFIER')",
+                        "STATE": "F"
+                    }
+                },
+                "runAfter": {
+                    "Update_status_in_STS_to_F_Delivery_failure": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Invoke_process_Notifications_workflow_with_state_F_Transform": {
+                "type": "Workflow",
+                "inputs": {
+                    "host": {
+                        "workflow": {
+                            "id": "WF_PRM_ProcessNotifications"
+                        }
+                    },
+                    "body": {
+                        "BATCH_ID": "@body('Parse_SB_Message_JSON')?['BATCH_ID']",
+                        "LOAD_BATCH_ID": "@body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']",
+                        "LOCATION": "@body('Parse_SB_Message_JSON')?['LOCATION']",
+                        "LOAD_WEEK": "@body('Parse_SB_Message_JSON')?['LOAD_WEEK']",
+                        "RUN_IDENTIFIER": "@body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']",
+                        "UNIQUE_IDENTIFIER": "@outputs('Create_UNIQUE_IDENTIFIER')",
+                        "STATE": "FTRANSFORM"
+                    }
+                },
+                "runAfter": {
+                    "Update_status_in_STS_to_F_Transform": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Invoke_process_Notifications_workflow_with_state_F_XML_for_BRE": {
+                "type": "Workflow",
+                "inputs": {
+                    "host": {
+                        "workflow": {
+                            "id": "WF_PRM_ProcessNotifications"
+                        }
+                    },
+                    "body": {
+                        "BATCH_ID": "@body('Parse_SB_Message_JSON')?['BATCH_ID']",
+                        "LOAD_BATCH_ID": "@body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']",
+                        "LOCATION": "@body('Parse_SB_Message_JSON')?['LOCATION']",
+                        "LOAD_WEEK": "@body('Parse_SB_Message_JSON')?['LOAD_WEEK']",
+                        "RUN_IDENTIFIER": "@body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']",
+                        "UNIQUE_IDENTIFIER": "@outputs('Create_UNIQUE_IDENTIFIER')",
+                        "STATE": "FXMLBRE"
+                    }
+                },
+                "runAfter": {
+                    "Update_status_in_STS_to_F_XML_for_BRE": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Terminate_F_BRE": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Failed",
+                    "runError": {
+                        "message": "Error while running BRE"
+                    }
+                },
+                "runAfter": {
+                    "Invoke_process_Notifications_workflow_with_state_F_BRE": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Terminate_Get_store_data-copy": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Failed",
+                    "runError": {
+                        "message": "Error getting store data"
+                    }
+                },
+                "runAfter": {
+                    "Invoke_process_Notifications_workflow_with_state_F_Get_store_data-copy": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Invoke_process_Notifications_workflow_with_state_F_Get_store_data-copy": {
+                "type": "Workflow",
+                "inputs": {
+                    "host": {
+                        "workflow": {
+                            "id": "WF_PRM_ProcessNotifications"
+                        }
+                    },
+                    "body": {
+                        "BATCH_ID": "@body('Parse_SB_Message_JSON')?['BATCH_ID']",
+                        "LOAD_BATCH_ID": "@body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']",
+                        "LOCATION": "@body('Parse_SB_Message_JSON')?['LOCATION']",
+                        "LOAD_WEEK": "@body('Parse_SB_Message_JSON')?['LOAD_WEEK']",
+                        "RUN_IDENTIFIER": "@body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']",
+                        "UNIQUE_IDENTIFIER": "@outputs('Create_UNIQUE_IDENTIFIER')",
+                        "STATE": "FGSD"
+                    }
+                },
+                "runAfter": {
+                    "Update_status_in_STS_to_F_Get_store_data": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Invoke_process_Notifications_workflow_with_state_F_BRE": {
+                "type": "Workflow",
+                "inputs": {
+                    "host": {
+                        "workflow": {
+                            "id": "WF_PRM_ProcessNotifications"
+                        }
+                    },
+                    "body": {
+                        "BATCH_ID": "@body('Parse_SB_Message_JSON')?['BATCH_ID']",
+                        "LOAD_BATCH_ID": "@body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']",
+                        "LOCATION": "@body('Parse_SB_Message_JSON')?['LOCATION']",
+                        "LOAD_WEEK": "@body('Parse_SB_Message_JSON')?['LOAD_WEEK']",
+                        "RUN_IDENTIFIER": "@body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']",
+                        "UNIQUE_IDENTIFIER": "@outputs('Create_UNIQUE_IDENTIFIER')",
+                        "STATE": "FBRE"
+                    }
+                },
+                "runAfter": {
+                    "Update_status_in_STS_to_F_BRE": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Execute_query_count_status_is_P": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "SELECT count(*)\n  FROM [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_DCM_STS] WITH (NOLOCK)\n  WHERE [RUN_IDENTIFIER]='@{body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']}' AND [CLOUD_PRM_STATUS] = 'P'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Scope_deliver_doc": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Parse_STS_query_response_count_status_is_P": {
+                "type": "ParseJson",
+                "inputs": {
+                    "content": "@body('Execute_query_count_status_is_P')[0][0]",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "Column1": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Execute_query_count_status_is_P": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Condition_P_less_than_2": {
+                "type": "If",
+                "expression": {
+                    "and": [
+                        {
+                            "lessOrEquals": [
+                                "@body('Parse_STS_query_response_count_status_is_P')?['Column1']",
+                                2
+                            ]
+                        }
+                    ]
+                },
+                "actions": {
+                    "Invoke_process_Notifications_workflow_with_state_C": {
+                        "type": "Workflow",
+                        "inputs": {
+                            "host": {
+                                "workflow": {
+                                    "id": "WF_PRM_ProcessNotifications"
+                                }
+                            },
+                            "body": {
+                                "BATCH_ID": "@body('Parse_SB_Message_JSON')?['BATCH_ID']",
+                                "LOAD_BATCH_ID": "@body('Parse_SB_Message_JSON')?['LOAD_BATCH_ID']",
+                                "LOCATION": "@body('Parse_SB_Message_JSON')?['LOCATION']",
+                                "LOAD_WEEK": "@body('Parse_SB_Message_JSON')?['LOAD_WEEK']",
+                                "RUN_IDENTIFIER": "@body('Parse_SB_Message_JSON')?['RUN_IDENTIFIER']",
+                                "UNIQUE_IDENTIFIER": "@outputs('Create_UNIQUE_IDENTIFIER')",
+                                "STATE": "C"
+                            },
+                            "retryPolicy": {
+                                "type": "fixed",
+                                "count": 5,
+                                "interval": "PT05S"
+                            }
+                        }
+                    }
+                },
+                "else": {
+                    "actions": {}
+                },
+                "runAfter": {
+                    "Update_status_in_STS_to_C": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Update_status_in_STS_to_C": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [dbo].[CO_PRM_DCM_STS]\nSET [PROCESSING_STATUS] = 'C', [CLOUD_PRM_STATUS] = 'C', [TRANSFORMATION_END_TIME] = '@{utcNow()}', [DOCUMENT_PROCESSING_END_TIME] = '@{utcNow()}'\nWHERE [UNIQUE_IDENTIFIER] = '@{outputs('Create_UNIQUE_IDENTIFIER')}'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Parse_STS_query_response_count_status_is_P": [
+                        "SUCCEEDED"
+                    ]
+                }
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_messages_are_available_in_a_queue_(peek-lock)": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "queueName": "sb_qe_prm_processcontrol"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "serviceBus",
+                        "operationId": "peekLockQueueMessagesV2",
+                        "serviceProviderId": "/serviceProviders/serviceBus"
+                    }
+                },
+                "splitOn": "@triggerOutputs()?['body']"
+            }
+        }
+    },
+    "kind": "Stateful"
+}

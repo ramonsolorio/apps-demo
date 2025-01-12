@@ -1,0 +1,275 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Scope": {
+                "type": "Scope",
+                "actions": {
+                    "Execute_query_status_is_P": {
+                        "type": "ServiceProvider",
+                        "inputs": {
+                            "parameters": {
+                                "query": "SELECT count(*)\n  FROM [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_DCM_STS] WITH (NOLOCK)\n  WHERE [RUN_IDENTIFIER]='@{triggerBody()?['RUN_IDENTIFIER']}' AND [CLOUD_PRM_STATUS] = 'P'"
+                            },
+                            "serviceProviderConfiguration": {
+                                "connectionName": "sql",
+                                "operationId": "executeQuery",
+                                "serviceProviderId": "/serviceProviders/sql"
+                            }
+                        }
+                    },
+                    "Parse_STS_query_response": {
+                        "type": "ParseJson",
+                        "inputs": {
+                            "content": "@body('Execute_query_status_is_P')[0][0]",
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "Column1": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Execute_query_status_is_P": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    },
+                    "If_count_is_1_or_less": {
+                        "type": "If",
+                        "expression": {
+                            "and": [
+                                {
+                                    "lessOrEquals": [
+                                        "@body('Parse_STS_query_response')?['Column1']",
+                                        1
+                                    ]
+                                }
+                            ]
+                        },
+                        "actions": {
+                            "Update_CFG": {
+                                "type": "ServiceProvider",
+                                "inputs": {
+                                    "parameters": {
+                                        "query": "UPDATE [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_CONFIGD] SET IsRunning = 'N', CREATED_DATE = '@{utcNow()}', Description = 'Complete', ReturnValue = 0"
+                                    },
+                                    "serviceProviderConfiguration": {
+                                        "connectionName": "sql",
+                                        "operationId": "executeQuery",
+                                        "serviceProviderId": "/serviceProviders/sql"
+                                    }
+                                },
+                                "runAfter": {
+                                    "Parse_CO_PRM_CONFIGD_query_response": [
+                                        "SUCCEEDED"
+                                    ]
+                                }
+                            },
+                            "Condition_UseMock": {
+                                "type": "If",
+                                "expression": {
+                                    "and": [
+                                        {
+                                            "equals": [
+                                                "@body('Parse_CO_PRM_CONFIGD_query_response')?['IsRunning']",
+                                                "M"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "actions": {
+                                    "Upload_trigger_blob_to_storage_container-mock": {
+                                        "type": "ServiceProvider",
+                                        "inputs": {
+                                            "parameters": {
+                                                "containerName": "copystatustoonprem-mock",
+                                                "blobName": "adf-parameters.json",
+                                                "content": {
+                                                    "RUN_IDENTIFIER": "@{triggerBody()?['RUN_IDENTIFIER']}"
+                                                }
+                                            },
+                                            "serviceProviderConfiguration": {
+                                                "connectionName": "AzureBlob",
+                                                "operationId": "uploadBlob",
+                                                "serviceProviderId": "/serviceProviders/AzureBlob"
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "actions": {
+                                        "Upload_trigger_blob_to_storage_container-onprem": {
+                                            "type": "ServiceProvider",
+                                            "inputs": {
+                                                "parameters": {
+                                                    "containerName": "copystatustoonprem",
+                                                    "blobName": "adf-parameters.json",
+                                                    "content": {
+                                                        "RUN_IDENTIFIER": "@{triggerBody()?['RUN_IDENTIFIER']}"
+                                                    }
+                                                },
+                                                "serviceProviderConfiguration": {
+                                                    "connectionName": "AzureBlob",
+                                                    "operationId": "uploadBlob",
+                                                    "serviceProviderId": "/serviceProviders/AzureBlob"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "runAfter": {
+                                    "Update_CFG": [
+                                        "SUCCEEDED"
+                                    ]
+                                }
+                            },
+                            "Send_message_notification": {
+                                "type": "ServiceProvider",
+                                "inputs": {
+                                    "parameters": {
+                                        "entityName": "sb_qe_prm_notifications",
+                                        "message": {
+                                            "contentData": {
+                                                "type": "PRM",
+                                                "source": "CT",
+                                                "organizationCountry": "MX"
+                                            },
+                                            "contentType": "application/json"
+                                        }
+                                    },
+                                    "serviceProviderConfiguration": {
+                                        "connectionName": "serviceBus",
+                                        "operationId": "sendMessage",
+                                        "serviceProviderId": "/serviceProviders/serviceBus"
+                                    }
+                                },
+                                "runAfter": {
+                                    "Condition_UseMock": [
+                                        "SUCCEEDED"
+                                    ]
+                                }
+                            },
+                            "Execute_query_CO_PRM_CONFIGD_Get_IsRunning": {
+                                "type": "ServiceProvider",
+                                "inputs": {
+                                    "parameters": {
+                                        "query": "SELECT [IsRunning]\n  FROM [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_CONFIGD] WITH (NOLOCK)"
+                                    },
+                                    "serviceProviderConfiguration": {
+                                        "connectionName": "sql",
+                                        "operationId": "executeQuery",
+                                        "serviceProviderId": "/serviceProviders/sql"
+                                    }
+                                }
+                            },
+                            "Parse_CO_PRM_CONFIGD_query_response": {
+                                "type": "ParseJson",
+                                "inputs": {
+                                    "content": "@body('Execute_query_CO_PRM_CONFIGD_Get_IsRunning')[0][0]",
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "IsRunning": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "runAfter": {
+                                    "Execute_query_CO_PRM_CONFIGD_Get_IsRunning": [
+                                        "SUCCEEDED"
+                                    ]
+                                }
+                            }
+                        },
+                        "else": {
+                            "actions": {}
+                        },
+                        "runAfter": {
+                            "Parse_STS_query_response": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {}
+            },
+            "Response_200_OK": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 200,
+                    "body": {
+                        "RUN_IDENTIFIER": "@{triggerBody()?['RUN_IDENTIFIER']}",
+                        "UNIQUE_IDENTIFIER": "@{triggerBody()?['UNIQUE_IDENTIFIER']}",
+                        "IsRunning": ""
+                    }
+                },
+                "runAfter": {
+                    "Scope": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Response_400_Bad_Request": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 400,
+                    "body": {
+                        "RUN_IDENTIFIER": "@{triggerBody()?['RUN_IDENTIFIER']}",
+                        "UNIQUE_IDENTIFIER": "@{triggerBody()?['UNIQUE_IDENTIFIER']}",
+                        "IsRunning": ""
+                    }
+                },
+                "runAfter": {
+                    "Scope": [
+                        "TIMEDOUT",
+                        "SKIPPED",
+                        "FAILED"
+                    ]
+                }
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_HTTP_request_is_received": {
+                "type": "Request",
+                "kind": "Http",
+                "inputs": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "BATCH_ID": {
+                                "type": "string"
+                            },
+                            "LOAD_BATCH_ID": {
+                                "type": "string"
+                            },
+                            "LOCATION": {
+                                "type": "string"
+                            },
+                            "LOAD_WEEK": {
+                                "type": "string"
+                            },
+                            "RUN_IDENTIFIER": {
+                                "type": "string"
+                            },
+                            "UNIQUE_IDENTIFIER": {
+                                "type": "string"
+                            },
+                            "STATE": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "kind": "stateful"
+}

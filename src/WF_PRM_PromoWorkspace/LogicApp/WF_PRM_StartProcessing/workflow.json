@@ -1,0 +1,112 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Get_RUN_IDENTIFIER_query": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "SELECT [RUN_IDENTIFIER]\n  FROM [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_CONFIGD]"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {}
+            },
+            "Parse_get_RUN_IDENTIFIER": {
+                "type": "ParseJson",
+                "inputs": {
+                    "content": "@body('Get_RUN_IDENTIFIER_query')[0][0]",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "RUN_IDENTIFIER": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Update_RUN_CONFIGURATION_start-processing": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Terminate": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Succeeded"
+                },
+                "runAfter": {
+                    "Response": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "HTTP_call_enqueue_PRM_function_app": {
+                "type": "Http",
+                "inputs": {
+                    "uri": "@appsetting('FUNCTION_APP_URL')",
+                    "method": "POST",
+                    "body": {
+                        "RUN_IDENTIFIER": "@{body('Parse_get_RUN_IDENTIFIER')?['RUN_IDENTIFIER']}",
+                        "QUEUE_NAME": "sb_qe_prm_processcontrol"
+                    }
+                },
+                "runAfter": {
+                    "Parse_get_RUN_IDENTIFIER": [
+                        "SUCCEEDED"
+                    ]
+                },
+                "runtimeConfiguration": {
+                    "contentTransfer": {
+                        "transferMode": "Chunked"
+                    }
+                }
+            },
+            "Response": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": "@outputs('HTTP_call_enqueue_PRM_function_app')?['statusCode']",
+                    "body": "@body('HTTP_call_enqueue_PRM_function_app')"
+                },
+                "runAfter": {
+                    "HTTP_call_enqueue_PRM_function_app": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Update_RUN_CONFIGURATION_start-processing": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_CONFIGD] SET Description = 'In Progress: Start processing data'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {
+                    "Get_RUN_IDENTIFIER_query": [
+                        "SUCCEEDED"
+                    ]
+                }
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_HTTP_request_is_received": {
+                "type": "Request",
+                "kind": "Http"
+            }
+        }
+    },
+    "kind": "Stateful"
+}

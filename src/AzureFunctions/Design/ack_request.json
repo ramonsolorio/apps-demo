@@ -1,0 +1,25 @@
+{
+  "CRPlaza": "10MON",
+  "CRTienda": "50MCZ",
+  "source": "POS",
+  "documents": [
+    {
+      "PVDocName": "ITM10MON50MCZ231010140200.json.gz",
+      "PVDocType": "ITM",
+      "PVStatus": "P",
+      "PVEventDate": "10/10/2023 14:02:00"
+    },
+    {
+      "PVDocName": "PRM10MON50MCZ231010180510.json.gz",
+      "PVDocType": "PRM",
+      "PVStatus": "R",
+      "PVEventDate": "10/10/2023 18:05:10"
+    },
+    {
+      "PVDocName": "PMC10MON50MCZ231010201625.json.gz",
+      "PVDocType": "PRM",
+      "PVStatus": "R",
+      "PVEventDate": "10/10/2023 20:16:25"
+    }
+  ]
+}

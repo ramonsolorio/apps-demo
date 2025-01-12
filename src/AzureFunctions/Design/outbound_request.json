@@ -1,0 +1,43 @@
+{
+  "CRPlaza": "10MON",
+  "CRTienda": "50MCZ",
+  "source": "POS",
+  "documents": [
+    {
+      "PVDocName": "ITM10MON50MCZ231010140200.json.gz",
+      "PVDocType": "ITM"
+    },
+    {
+      "PVDocName": "PRM10MON50MCZ231010180510.json.gz",
+      "PVDocType": "PRM"
+    },
+    {
+      "PVDocName": "PMC10MON50MCZ231010130210.json.gz",
+      "PVDocType": "PMC"
+    },
+    {
+      "PVDocName": "ILS10MON50MCZ231012120714.json.gz",
+      "PVDocType": "ILS"
+    },
+    {
+      "PVDocName": "TSC10MON50MCZ231105140210.json.gz",
+      "PVDocType": "TSC"
+    },
+    {
+      "PVDocName": "EXR10MON50MCZ231101245110.json.gz",
+      "PVDocType": "EXR"
+    },
+    {
+      "PVDocName": "ECA10MON50MCZ230425120840.json.gz",
+      "PVDocType": "ECA"
+    },
+    {
+      "PVDocName": "POD10MON50MCZ231012180712.json.gz",
+      "PVDocType": "POD"
+    },
+    {
+      "PVDocName": "ASN10MON50MCZ230710140200.json.gz",
+      "PVDocType": "ASN"
+    }
+  ]
+}

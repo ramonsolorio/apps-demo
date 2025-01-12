@@ -1,0 +1,255 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Response_200_OK": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 200,
+                    "body": {
+                        "RUN_IDENTIFIER": "@{outputs('Initialize_RUN_IDENTIFIER')}",
+                        "UseMock": "@{triggerBody()?['UseMock']}"
+                    }
+                },
+                "runAfter": {
+                    "Scope": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Scope": {
+                "type": "Scope",
+                "actions": {
+                    "Initialize_RUN_IDENTIFIER": {
+                        "type": "Compose",
+                        "inputs": "@guid()"
+                    },
+                    "Initialize_CREATED_DATE": {
+                        "type": "Compose",
+                        "inputs": "@utcNow()",
+                        "runAfter": {
+                            "Initialize_RUN_IDENTIFIER": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    },
+                    "IsRunning_state_query": {
+                        "type": "ServiceProvider",
+                        "inputs": {
+                            "parameters": {
+                                "query": "SELECT [IsRunning]\n  FROM [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_CONFIGD]"
+                            },
+                            "serviceProviderConfiguration": {
+                                "connectionName": "sql",
+                                "operationId": "executeQuery",
+                                "serviceProviderId": "/serviceProviders/sql"
+                            }
+                        },
+                        "runAfter": {
+                            "Initialize_CREATED_DATE": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    },
+                    "Parse_IsRunning": {
+                        "type": "ParseJson",
+                        "inputs": {
+                            "content": "@body('IsRunning_state_query')[0][0]",
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "IsRunning": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "IsRunning_state_query": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    },
+                    "Condition_Is_Running": {
+                        "type": "If",
+                        "expression": {
+                            "and": [
+                                {
+                                    "equals": [
+                                        "@body('Parse_IsRunning')?['IsRunning']",
+                                        "N"
+                                    ]
+                                }
+                            ]
+                        },
+                        "actions": {
+                            "Condition_Use_Mock": {
+                                "type": "If",
+                                "expression": {
+                                    "and": [
+                                        {
+                                            "equals": [
+                                                "@triggerBody()?['UseMock']",
+                                                "Y"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "actions": {
+                                    "Upload_trigger_blob_to_storage_container-mock": {
+                                        "type": "ServiceProvider",
+                                        "inputs": {
+                                            "parameters": {
+                                                "containerName": "copyheaderdatadetailsstg-mock",
+                                                "blobName": "adf-parameters.json",
+                                                "content": {
+                                                    "Start": "Y"
+                                                }
+                                            },
+                                            "serviceProviderConfiguration": {
+                                                "connectionName": "AzureBlob",
+                                                "operationId": "uploadBlob",
+                                                "serviceProviderId": "/serviceProviders/AzureBlob"
+                                            }
+                                        },
+                                        "runAfter": {
+                                            "Update_RUN_CONFIGURATION_start-mock": [
+                                                "SUCCEEDED"
+                                            ]
+                                        }
+                                    },
+                                    "Update_RUN_CONFIGURATION_start-mock": {
+                                        "type": "ServiceProvider",
+                                        "inputs": {
+                                            "parameters": {
+                                                "query": "UPDATE [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_CONFIGD] SET IsRunning = 'M', RUN_IDENTIFIER = '@{outputs('Initialize_RUN_IDENTIFIER')}', CREATED_DATE = '@{outputs('Initialize_CREATED_DATE')}', Description = 'In Progress: Start copy of header data', ReturnValue = 0"
+                                            },
+                                            "serviceProviderConfiguration": {
+                                                "connectionName": "sql",
+                                                "operationId": "executeQuery",
+                                                "serviceProviderId": "/serviceProviders/sql"
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "actions": {
+                                        "Upload_trigger_blob_to_storage_container-onprem": {
+                                            "type": "ServiceProvider",
+                                            "inputs": {
+                                                "parameters": {
+                                                    "containerName": "copyheaderdatadetailsstg",
+                                                    "blobName": "adf-parameters.json",
+                                                    "content": {
+                                                        "Start": "Y"
+                                                    }
+                                                },
+                                                "serviceProviderConfiguration": {
+                                                    "connectionName": "AzureBlob",
+                                                    "operationId": "uploadBlob",
+                                                    "serviceProviderId": "/serviceProviders/AzureBlob"
+                                                }
+                                            },
+                                            "runAfter": {
+                                                "Update_RUN_CONFIGURATION_start-onprem": [
+                                                    "SUCCEEDED"
+                                                ]
+                                            }
+                                        },
+                                        "Update_RUN_CONFIGURATION_start-onprem": {
+                                            "type": "ServiceProvider",
+                                            "inputs": {
+                                                "parameters": {
+                                                    "query": "UPDATE [MDB_ERDD_PromotionCloud].[dbo].[CO_PRM_CONFIGD] SET IsRunning = 'Y', RUN_IDENTIFIER = '@{outputs('Initialize_RUN_IDENTIFIER')}', CREATED_DATE = '@{outputs('Initialize_CREATED_DATE')}', Description = 'In Progress: Start copy of header data', ReturnValue = 0"
+                                                },
+                                                "serviceProviderConfiguration": {
+                                                    "connectionName": "sql",
+                                                    "operationId": "executeQuery",
+                                                    "serviceProviderId": "/serviceProviders/sql"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "else": {
+                            "actions": {
+                                "Response_400_Bad_Request-Is_Running": {
+                                    "type": "Response",
+                                    "kind": "Http",
+                                    "inputs": {
+                                        "statusCode": 400,
+                                        "body": {
+                                            "Error": "Another process is already running",
+                                            "UseMock": "@{triggerBody()?['UseMock']}"
+                                        }
+                                    }
+                                },
+                                "Terminate_400_IsRunning": {
+                                    "type": "Terminate",
+                                    "inputs": {
+                                        "runStatus": "Failed",
+                                        "runError": {
+                                            "code": "400",
+                                            "message": "Another process is already running"
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "Response_400_Bad_Request-Is_Running": [
+                                            "SUCCEEDED"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Parse_IsRunning": [
+                                "SUCCEEDED"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {}
+            },
+            "Response_400_Bad_Request": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 400,
+                    "body": {
+                        "Error": "Bad Request",
+                        "UseMock": "@{triggerBody()?['UseMock']}"
+                    }
+                },
+                "runAfter": {
+                    "Scope": [
+                        "FAILED",
+                        "SKIPPED",
+                        "TIMEDOUT"
+                    ]
+                }
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_HTTP_request_is_received": {
+                "type": "Request",
+                "kind": "Http",
+                "inputs": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "UseMock": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "kind": "Stateful"
+}

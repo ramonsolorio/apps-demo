@@ -1,0 +1,45 @@
+name: Create Mock Tables and Stored Procedures
+
+# on:
+#   push:
+#     branches:
+#       - puneeth
+on:
+  workflow_dispatch: 
+
+env:
+  ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'PROD' || github.ref == 'refs/heads/staging' && 'QA' || 'DEV' }}
+  MOCK_SQL_CREATE_TABLE_SQL_PATH: 'src/DataFactory/Scripts/SQL/OracleOnPremMock/Create_Oracle_Tables.sql'
+  MOCK_SQL_CREATE_SPROC_SQL_PATH: 'src/DataFactory/Scripts/SQL/OracleOnPremMock/SProcs'
+
+jobs:
+  create-tables:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set connection string
+      run: echo "AZURE_SQL_CONNECTION_STRING_MOCK=${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_MOCK', env.ENVIRONMENT)] }}" >> $GITHUB_ENV
+
+    - name: Azure SQL Managed Instance - Create Tables
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ env.AZURE_SQL_CONNECTION_STRING_MOCK }}
+        path: ${{ env.MOCK_SQL_CREATE_TABLE_SQL_PATH }}
+
+  create-sprocs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set connection string
+      run: echo "AZURE_SQL_CONNECTION_STRING_MOCK=${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_MOCK', env.ENVIRONMENT)] }}" >> $GITHUB_ENV
+
+    - name: Azure SQL Managed Instance - Create Stored Procedure - CreateGetPromomotionDataXmlSproc
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ env.AZURE_SQL_CONNECTION_STRING_MOCK }}
+        path: ${{ env.MOCK_SQL_CREATE_SPROC_SQL_PATH }}/CreateGetXxfcMaestroDeCrsVData.sql
+

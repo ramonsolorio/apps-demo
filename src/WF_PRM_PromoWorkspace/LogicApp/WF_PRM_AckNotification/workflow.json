@@ -1,0 +1,67 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Response": {
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                    "statusCode": 200
+                },
+                "runAfter": {
+                    "Set_ACK_in_STS_to_A": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Set_ACK_in_STS_to_A": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "UPDATE [dbo].[CO_PRM_DCM_STS] WITH (UPDLOCK)\nSET CLOUD_PRM_STATUS = 'A', PROCESSING_STATUS = 'A', PV_STATUS = '@{triggerBody()?['PVStatus']}', PV_EVENT_DATE = '@{triggerBody()?['PVEventDate']}'\nWHERE [PV_DOC_NAME] = '@{triggerBody()?['PVDocName']}'"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {}
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_HTTP_request_is_received": {
+                "type": "Request",
+                "kind": "Http",
+                "inputs": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "CRPlaza": {
+                                "type": "string"
+                            },
+                            "CRTienda": {
+                                "type": "string"
+                            },
+                            "PVDocName": {
+                                "type": "string"
+                            },
+                            "PVDocType": {
+                                "type": "string"
+                            },
+                            "PVStatus": {
+                                "type": "string"
+                            },
+                            "PVEventDate": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "kind": "Stateful"
+}

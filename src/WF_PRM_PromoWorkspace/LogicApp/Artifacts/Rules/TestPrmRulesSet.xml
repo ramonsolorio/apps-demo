@@ -1,0 +1,3483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<brl xmlns="http://schemas.microsoft.com/businessruleslanguage/2002">
+  <ruleset name="TestPrmRulesSet">
+    <version major="1" minor="1" description="" modifiedby="AzureAD\JavierDalzell" date="2024-12-03T22:11:21.043517Z" />
+    <configuration />
+    <bindings>
+      <xmldocument ref="xml_33" doctype="PromoDataSchema" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='PromotionBatch' and namespace-uri()='']</selector>
+        <selectoralias>/PromotionBatch</selectoralias>
+        <schema>D:\Repos\OXXO\DIG_APP_PRM_ERDD\src\WF_PRM_PromoWorkspace\LogicApp\Artifacts\Schemas\PromoDataSchema.xsd</schema>
+      </xmldocument>
+      <xmldocument ref="xml_31" doctype="PromoDataSchema" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='PromotionBatch' and namespace-uri()='']/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']</selector>
+        <selectoralias>/PromotionBatch/Promotions/PromotionData</selectoralias>
+        <schema>D:\Repos\OXXO\DIG_APP_PRM_ERDD\src\WF_PRM_PromoWorkspace\LogicApp\Artifacts\Schemas\PromoDataSchema.xsd</schema>
+      </xmldocument>
+    </bindings>
+    <rule name="TR16.7" priority="0" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1001</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1002</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1000</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1007</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='prefix' and namespace-uri()='']</field>
+                  <fieldalias>prefix</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>2</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string>F</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR26.2" priority="0" active="true">
+      <if>
+        <not>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                    <fieldalias>manualPriceEntry</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>M</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                    <fieldalias>manualPriceEntry</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>E</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </not>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='messagePsg' and namespace-uri()='']</field>
+            <fieldalias>messagePsg</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR16.8" priority="0" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1006</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR12.1" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSku' and namespace-uri()='']</field>
+            <fieldalias>itemSku</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR16.4" priority="0" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='prefix' and namespace-uri()='']</field>
+                  <fieldalias>prefix</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>2</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string>F</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR17.1" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <or>
+            <not>
+              <exists>
+                <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+                <object>
+                  <reference>
+                    <xmldocumentref ref="xml_33" />
+                  </reference>
+                </object>
+                <member>
+                  <constant>
+                    <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                  </constant>
+                </member>
+              </exists>
+            </not>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='optative' and namespace-uri()='']</field>
+            <fieldalias>optative</fieldalias>
+            <argument>
+              <constant>
+                <string>0</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR14.2" priority="3" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='newSellingUom' and namespace-uri()='']</field>
+                  <fieldalias>newSellingUom</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>KG</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='requiredQuantity' and namespace-uri()='']</field>
+            <fieldalias>requiredQuantity</fieldalias>
+            <argument>
+              <constant>
+                <string>0.001</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR15.2" priority="1" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discount' and namespace-uri()='']</field>
+            <fieldalias>discount</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='newPrice' and namespace-uri()='']</field>
+                  <fieldalias>newPrice</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR09.2" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='type' and namespace-uri()='']</field>
+            <fieldalias>type</fieldalias>
+            <argument>
+              <constant>
+                <string>01</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR19.2" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSubcategory' and namespace-uri()='']</field>
+            <fieldalias>itemSubcategory</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='dept' and namespace-uri()='']</field>
+                  <fieldalias>dept</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR20.1" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <or>
+            <not>
+              <exists>
+                <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+                <object>
+                  <reference>
+                    <xmldocumentref ref="xml_33" />
+                  </reference>
+                </object>
+                <member>
+                  <constant>
+                    <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                  </constant>
+                </member>
+              </exists>
+            </not>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSegment' and namespace-uri()='']</field>
+            <fieldalias>itemSegment</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR01.1" priority="0" active="true">
+      <if>
+        <and>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='lineNumber' and namespace-uri()='']</field>
+                  <fieldalias>lineNumber</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>2</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='description' and namespace-uri()='']</field>
+            <fieldalias>description</fieldalias>
+            <argument>
+              <constant>
+                <string>ABC</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <update>
+          <vocabularylink uri="aee857f2-09d5-4615-a96c-87041791ec42" element="57517cc6-6bb7-46eb-99eb-a1fdddd5d2f6" />
+          <object>
+            <function>
+              <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                <field>*[local-name()='description' and namespace-uri()='']</field>
+                <fieldalias>description</fieldalias>
+              </xmldocumentmember>
+            </function>
+          </object>
+        </update>
+      </then>
+    </rule>
+    <rule name="TR25.2" priority="0" active="true">
+      <if>
+        <not>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                    <fieldalias>manualPriceEntry</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>M</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                    <fieldalias>manualPriceEntry</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>E</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </not>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='binCode' and namespace-uri()='']</field>
+            <fieldalias>binCode</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR08.1" priority="3" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='PromotionBatch' and namespace-uri()='']/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemCategory' and namespace-uri()='']</field>
+            <fieldalias>itemCategory</fieldalias>
+            <argument>
+              <constant>
+                <string>1</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR21.1" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <or>
+            <not>
+              <exists>
+                <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+                <object>
+                  <reference>
+                    <xmldocumentref ref="xml_33" />
+                  </reference>
+                </object>
+                <member>
+                  <constant>
+                    <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                  </constant>
+                </member>
+              </exists>
+            </not>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSubsegment' and namespace-uri()='']</field>
+            <fieldalias>itemSubsegment</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR15.4" priority="3" active="true">
+      <if>
+        <compare operator="equal">
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+          <lhs>
+            <function>
+              <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                <fieldalias>tranType</fieldalias>
+              </xmldocumentmember>
+            </function>
+          </lhs>
+          <rhs>
+            <constant>
+              <string>32</string>
+            </constant>
+          </rhs>
+        </compare>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discount' and namespace-uri()='']</field>
+            <fieldalias>discount</fieldalias>
+            <argument>
+              <constant>
+                <string>0</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR16.1" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR09.4" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1006</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='type' and namespace-uri()='']</field>
+            <fieldalias>type</fieldalias>
+            <argument>
+              <constant>
+                <string>06</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR26.1" priority="1" active="true">
+      <if>
+        <or>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                  <fieldalias>manualPriceEntry</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>M</string>
+              </constant>
+            </rhs>
+          </compare>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                  <fieldalias>manualPriceEntry</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>E</string>
+              </constant>
+            </rhs>
+          </compare>
+        </or>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='messagePsg' and namespace-uri()='']</field>
+            <fieldalias>messagePsg</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='msgPos' and namespace-uri()='']</field>
+                  <fieldalias>msgPos</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR08.2" priority="2" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemCategory' and namespace-uri()='']</field>
+            <fieldalias>itemCategory</fieldalias>
+            <argument>
+              <constant>
+                <string>2</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR16.6" priority="0" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1001</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1002</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1000</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1007</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='prefix' and namespace-uri()='']</field>
+                  <fieldalias>prefix</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string>A</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR17.3" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1000</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1007</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='optative' and namespace-uri()='']</field>
+            <fieldalias>optative</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='thresHold_no' and namespace-uri()='']</field>
+                  <fieldalias>thresHold_no</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR00.1" priority="0" active="true">
+      <if>
+        <compare operator="equal">
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+          <lhs>
+            <function>
+              <xmldocumentmember xmldocumentref="xml_33" type="string" sideeffects="false">
+                <field>*[local-name()='organizationCountry' and namespace-uri()='']</field>
+                <fieldalias>organizationCountry</fieldalias>
+              </xmldocumentmember>
+            </function>
+          </lhs>
+          <rhs>
+            <constant>
+              <string>MX</string>
+            </constant>
+          </rhs>
+        </compare>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_33" type="string" sideeffects="true">
+            <field>*[local-name()='organizationCountry' and namespace-uri()='']</field>
+            <fieldalias>organizationCountry</fieldalias>
+            <argument>
+              <constant>
+                <string>aaa</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <update>
+          <vocabularylink uri="aee857f2-09d5-4615-a96c-87041791ec42" element="57517cc6-6bb7-46eb-99eb-a1fdddd5d2f6" />
+          <object>
+            <function>
+              <xmldocumentmember xmldocumentref="xml_33" type="string" sideeffects="false">
+                <field>*[local-name()='organizationCountry' and namespace-uri()='']</field>
+                <fieldalias>organizationCountry</fieldalias>
+              </xmldocumentmember>
+            </function>
+          </object>
+        </update>
+      </then>
+    </rule>
+    <rule name="TR14.4" priority="1" active="true">
+      <if>
+        <compare operator="equal">
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+          <lhs>
+            <function>
+              <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                <fieldalias>tranType</fieldalias>
+              </xmldocumentmember>
+            </function>
+          </lhs>
+          <rhs>
+            <constant>
+              <string>32</string>
+            </constant>
+          </rhs>
+        </compare>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='requiredQuantity' and namespace-uri()='']</field>
+            <fieldalias>requiredQuantity</fieldalias>
+            <argument>
+              <constant>
+                <string>0</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR15.1" priority="0" active="true">
+      <if>
+        <or>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>32</string>
+              </constant>
+            </rhs>
+          </compare>
+        </or>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discount' and namespace-uri()='']</field>
+            <fieldalias>discount</fieldalias>
+            <argument>
+              <constant>
+                <string>0</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR20.3" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="not equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="c22af575-9920-417c-a545-67fa0ece9832" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSegment' and namespace-uri()='']</field>
+            <fieldalias>itemSegment</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR25.1" priority="1" active="true">
+      <if>
+        <or>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                  <fieldalias>manualPriceEntry</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>M</string>
+              </constant>
+            </rhs>
+          </compare>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                  <fieldalias>manualPriceEntry</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>E</string>
+              </constant>
+            </rhs>
+          </compare>
+        </or>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='binCode' and namespace-uri()='']</field>
+            <fieldalias>binCode</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promBinCode' and namespace-uri()='']</field>
+                  <fieldalias>promBinCode</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR19.1" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <or>
+            <not>
+              <exists>
+                <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+                <object>
+                  <reference>
+                    <xmldocumentref ref="xml_33" />
+                  </reference>
+                </object>
+                <member>
+                  <constant>
+                    <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                  </constant>
+                </member>
+              </exists>
+            </not>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSubcategory' and namespace-uri()='']</field>
+            <fieldalias>itemSubcategory</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR21.3" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="not equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="c22af575-9920-417c-a545-67fa0ece9832" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSubsegment' and namespace-uri()='']</field>
+            <fieldalias>itemSubsegment</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR16.3" priority="0" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='prefix' and namespace-uri()='']</field>
+                  <fieldalias>prefix</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string>A</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR09.6" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1007</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='type' and namespace-uri()='']</field>
+            <fieldalias>type</fieldalias>
+            <argument>
+              <constant>
+                <string>07</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR16.2" priority="0" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='prefix' and namespace-uri()='']</field>
+                  <fieldalias>prefix</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>0</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string>P</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR14.1" priority="4" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+          <compare operator="not equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="c22af575-9920-417c-a545-67fa0ece9832" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='newSellingUom' and namespace-uri()='']</field>
+                  <fieldalias>newSellingUom</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>KG</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='requiredQuantity' and namespace-uri()='']</field>
+            <fieldalias>requiredQuantity</fieldalias>
+            <argument>
+              <constant>
+                <string>1</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR24.2" priority="0" active="true">
+      <if>
+        <compare operator="equal">
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+          <lhs>
+            <function>
+              <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                <fieldalias>tranType</fieldalias>
+              </xmldocumentmember>
+            </function>
+          </lhs>
+          <rhs>
+            <constant>
+              <string>32</string>
+            </constant>
+          </rhs>
+        </compare>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='action' and namespace-uri()='']</field>
+            <fieldalias>action</fieldalias>
+            <argument>
+              <constant>
+                <string>F</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR23.2" priority="0" active="true">
+      <if>
+        <not>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='refPrefix' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+        </not>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='grouper' and namespace-uri()='']</field>
+            <fieldalias>grouper</fieldalias>
+            <argument>
+              <constant>
+                <string>0</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR16.5" priority="0" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1001</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1002</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1000</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1007</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='prefix' and namespace-uri()='']</field>
+                  <fieldalias>prefix</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>0</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discountType' and namespace-uri()='']</field>
+            <fieldalias>discountType</fieldalias>
+            <argument>
+              <constant>
+                <string>P</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR17.2" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1001</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1002</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                    <fieldalias>promTranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>1006</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='optative' and namespace-uri()='']</field>
+            <fieldalias>optative</fieldalias>
+            <argument>
+              <constant>
+                <string>1</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR09.1" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <not>
+            <exists>
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+              <object>
+                <reference>
+                  <xmldocumentref ref="xml_33" />
+                </reference>
+              </object>
+              <member>
+                <constant>
+                  <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+                </constant>
+              </member>
+            </exists>
+          </not>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='type' and namespace-uri()='']</field>
+            <fieldalias>type</fieldalias>
+            <argument>
+              <constant>
+                <string>03</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR15.3" priority="2" active="true">
+      <if>
+        <and>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='discount' and namespace-uri()='']</field>
+            <fieldalias>discount</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='discountAmt' and namespace-uri()='']</field>
+                  <fieldalias>discountAmt</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR09.3" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1002</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='type' and namespace-uri()='']</field>
+            <fieldalias>type</fieldalias>
+            <argument>
+              <constant>
+                <string>02</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR19.3" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="not equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="c22af575-9920-417c-a545-67fa0ece9832" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSubcategory' and namespace-uri()='']</field>
+            <fieldalias>itemSubcategory</fieldalias>
+            <argument>
+              <constant>
+                <string />
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR20.2" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSegment' and namespace-uri()='']</field>
+            <fieldalias>itemSegment</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='class' and namespace-uri()='']</field>
+                  <fieldalias>class</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR13.1" priority="0" active="true">
+      <if>
+        <or>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>31</string>
+              </constant>
+            </rhs>
+          </compare>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                  <fieldalias>tranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>32</string>
+              </constant>
+            </rhs>
+          </compare>
+        </or>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='category' and namespace-uri()='']</field>
+            <fieldalias>category</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='manualPriceEntry' and namespace-uri()='']</field>
+                  <fieldalias>manualPriceEntry</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR23.1" priority="0" active="true">
+      <if>
+        <exists>
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+          <object>
+            <reference>
+              <xmldocumentref ref="xml_33" />
+            </reference>
+          </object>
+          <member>
+            <constant>
+              <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='refPrefix' and namespace-uri()='']</string>
+            </constant>
+          </member>
+        </exists>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='grouper' and namespace-uri()='']</field>
+            <fieldalias>grouper</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='refPrefix' and namespace-uri()='']</field>
+                  <fieldalias>refPrefix</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR21.2" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemSubsegment' and namespace-uri()='']</field>
+            <fieldalias>itemSubsegment</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='subClass' and namespace-uri()='']</field>
+                  <fieldalias>subClass</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR24.1" priority="0" active="true">
+      <if>
+        <compare operator="equal">
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+          <lhs>
+            <function>
+              <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                <fieldalias>tranType</fieldalias>
+              </xmldocumentmember>
+            </function>
+          </lhs>
+          <rhs>
+            <constant>
+              <string>31</string>
+            </constant>
+          </rhs>
+        </compare>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='action' and namespace-uri()='']</field>
+            <fieldalias>action</fieldalias>
+            <argument>
+              <constant>
+                <string>A</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR09.5" priority="0" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1000</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='type' and namespace-uri()='']</field>
+            <fieldalias>type</fieldalias>
+            <argument>
+              <constant>
+                <string>00</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR14.3" priority="2" active="true">
+      <if>
+        <exists>
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+          <object>
+            <reference>
+              <xmldocumentref ref="xml_31" />
+            </reference>
+          </object>
+          <member>
+            <constant>
+              <string>/*[local-name()='thresHold_no' and namespace-uri()='rawxml']</string>
+            </constant>
+          </member>
+        </exists>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='requiredQuantity' and namespace-uri()='']</field>
+            <fieldalias>requiredQuantity</fieldalias>
+            <argument>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='thresHoldAmt' and namespace-uri()='']</field>
+                  <fieldalias>thresHoldAmt</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+    <rule name="TR08.3" priority="1" active="true">
+      <if>
+        <and>
+          <or>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>31</string>
+                </constant>
+              </rhs>
+            </compare>
+            <compare operator="equal">
+              <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+              <lhs>
+                <function>
+                  <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                    <field>*[local-name()='tranType' and namespace-uri()='']</field>
+                    <fieldalias>tranType</fieldalias>
+                  </xmldocumentmember>
+                </function>
+              </lhs>
+              <rhs>
+                <constant>
+                  <string>32</string>
+                </constant>
+              </rhs>
+            </compare>
+          </or>
+          <exists>
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="970c3ffe-de9e-4523-82b8-974a3c1eb686" />
+            <object>
+              <reference>
+                <xmldocumentref ref="xml_33" />
+              </reference>
+            </object>
+            <member>
+              <constant>
+                <string>/*[local-name()='Promotions' and namespace-uri()='']/*[local-name()='PromotionData' and namespace-uri()='']/*[local-name()='thresHold_no' and namespace-uri()='']</string>
+              </constant>
+            </member>
+          </exists>
+          <compare operator="not equal">
+            <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="c22af575-9920-417c-a545-67fa0ece9832" />
+            <lhs>
+              <function>
+                <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="false">
+                  <field>*[local-name()='promTranType' and namespace-uri()='']</field>
+                  <fieldalias>promTranType</fieldalias>
+                </xmldocumentmember>
+              </function>
+            </lhs>
+            <rhs>
+              <constant>
+                <string>1001</string>
+              </constant>
+            </rhs>
+          </compare>
+        </and>
+      </if>
+      <then>
+        <function>
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='itemCategory' and namespace-uri()='']</field>
+            <fieldalias>itemCategory</fieldalias>
+            <argument>
+              <constant>
+                <string>1</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+      </then>
+    </rule>
+  </ruleset>
+</brl>

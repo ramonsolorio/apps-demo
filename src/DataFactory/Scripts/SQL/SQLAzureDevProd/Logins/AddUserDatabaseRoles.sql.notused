@@ -1,0 +1,42 @@
+-- Must be run on PromotionCloudDb
+/*
+EXEC sp_droprolemember 'db_datareader', 'rprado';
+EXEC sp_droprolemember 'db_datareader', 'rhurtado';
+EXEC sp_droprolemember 'db_datareader', 'elopez';
+EXEC sp_droprolemember 'db_datareader', 'sojendiz';
+EXEC sp_droprolemember 'db_datareader', 'jibarra';
+EXEC sp_droprolemember 'db_datareader', 'jcarmona';
+EXEC sp_droprolemember 'db_datareader', 'rhaddad';
+EXEC sp_droprolemember 'db_datareader', 'dguajardo';
+EXEC sp_droprolemember 'db_datareader', 'jaguirre';
+
+EXEC sp_droprolemember 'db_datawriter', 'rprado';
+EXEC sp_droprolemember 'db_datawriter', 'rhurtado';
+EXEC sp_droprolemember 'db_datawriter', 'elopez';
+EXEC sp_droprolemember 'db_datawriter', 'sojendiz';
+EXEC sp_droprolemember 'db_datawriter', 'jibarra';
+EXEC sp_droprolemember 'db_datawriter', 'jcarmona';
+EXEC sp_droprolemember 'db_datawriter', 'rhaddad';
+EXEC sp_droprolemember 'db_datawriter', 'dguajardo';
+EXEC sp_droprolemember 'db_datawriter', 'jaguirre';
+*/
+
+EXEC sp_addrolemember 'db_datareader', 'rprado';
+EXEC sp_addrolemember 'db_datareader', 'rhurtado';
+EXEC sp_addrolemember 'db_datareader', 'elopez';
+EXEC sp_addrolemember 'db_datareader', 'sojendiz';
+EXEC sp_addrolemember 'db_datareader', 'jibarra';
+EXEC sp_addrolemember 'db_datareader', 'jcarmona';
+EXEC sp_addrolemember 'db_datareader', 'rhaddad';
+EXEC sp_addrolemember 'db_datareader', 'dguajardo';
+EXEC sp_addrolemember 'db_datareader', 'jaguirre';
+
+EXEC sp_addrolemember 'db_datawriter', 'rprado';
+EXEC sp_addrolemember 'db_datawriter', 'rhurtado';
+EXEC sp_addrolemember 'db_datawriter', 'elopez';
+EXEC sp_addrolemember 'db_datawriter', 'sojendiz';
+EXEC sp_addrolemember 'db_datawriter', 'jibarra';
+EXEC sp_addrolemember 'db_datawriter', 'jcarmona';
+EXEC sp_addrolemember 'db_datawriter', 'rhaddad';
+EXEC sp_addrolemember 'db_datawriter', 'dguajardo';
+EXEC sp_addrolemember 'db_datawriter', 'jaguirre';

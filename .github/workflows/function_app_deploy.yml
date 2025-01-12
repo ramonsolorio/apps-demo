@@ -1,0 +1,46 @@
+name: Deploy to Azure Function App
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+  workflow_dispatch:
+
+
+env:
+  ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'PROD' || github.ref == 'refs/heads/staging' && 'QA' || 'DEV' }}
+  DOTNET_VERSION: "8.0.x"
+  PACKAGE_PATH: "src/AzureFunctions/OxxoPromotionFunctionApp"
+  PROJECT_FILE: "OxxoPromotionFunctionApp.csproj"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./publish"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore ${{ env.PACKAGE_PATH }}/${{ env.PROJECT_FILE }}
+
+      - name: Build project
+        run: dotnet build ${{ env.PACKAGE_PATH }}/${{ env.PROJECT_FILE }} --configuration Release
+
+      - name: Publish project
+        run: dotnet publish ${{ env.PACKAGE_PATH }}/${{ env.PROJECT_FILE }} --configuration Release --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+
+      - name: Deploy to Azure Function App
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ vars[format('{0}_FUNCTION_APP_NAME', env.ENVIRONMENT)] }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets[format('{0}_AZURE_FUNCTIONAPP_PUBLISH_PROFILE', env.ENVIRONMENT)] }}

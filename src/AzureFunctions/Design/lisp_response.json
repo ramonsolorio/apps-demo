@@ -1,0 +1,23 @@
+{
+  "WMCode": "101",
+  "WMDesc": "Success",
+  "maxFiles": "5",
+  "documents": [
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "ITM10MON50MCZ231010140200.json.gz",
+      "PVDocType": "ITM",
+      "PVSize": "2048",
+      "PVRecords": "4",
+      "PVPriority": "1"
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "PRM10MON50MCZ231010180510.json.gz",
+      "PVDocType": "PRM",
+      "PVSize": "4096",
+      "PVRecords": "6",
+      "PVPriority": "2"
+    }
+  ]
+}

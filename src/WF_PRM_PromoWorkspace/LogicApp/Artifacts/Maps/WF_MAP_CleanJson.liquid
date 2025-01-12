@@ -1,0 +1,57 @@
+{
+    "organizationCountry": "{{content.organizationCountry}}",
+	"organizationName": "{{content.organizationName}}",
+	"businessName": "{{content.businessName}}",
+	"departmentId": "{{content.departmentId}}",
+	"storeId": "{{content.storeId}}",
+	"numberOfRecords": "{{content.numberOfRecords}}",
+	"searchId": "{{content.searchId}}",
+	"searchDate": "{{content.searchDate}}",
+	"promotions": [
+		{%- for promos in content.Promotions[0] -%}
+			{
+				"lineNumber": "{{promos.lineNumber}}",
+				"folio": "{{promos.folio}}",
+				"itemCategory": "{{promos.itemCategory}}",
+				"type": "{{promos.type}}",
+				"startDate": "{{promos.startDate}}",
+				"endDate": "{{promos.endDate}}",
+				"itemSku": "{{promos.itemSku}}",
+				"category": "{{promos.category}}",
+				"providerType": "{{promos.providerType}}",
+				{% if promos.requiredQuantity > 0 %}
+					"requiredQuantity": "{{promos.requiredQuantity}}",
+				{% else %}
+					"requiredQuantity": "{{0}}",
+				{% endif %}
+				{% if promos.discount > 0 %}
+					"discount": "{{promos.discount}}",
+				{% else %}
+					"discount": "{{0}}",
+				{% endif %}
+				"discountType": "{{promos.discountType}}",
+				"optative": "{{promos.optative}}",
+				"description": "{{promos.description}}",
+				"itemSubcategory": "{{promos.itemSubcategory}}",
+				"itemSegment": "{{promos.itemSegment}}",
+				"itemSubsegment": "{{promos.itemSubsegment}}",
+				"durationCode": "{{promos.durationCode}}",
+				{% if promos.grouper > 0 %}
+					"grouper": "{{promos.grouper}}",
+				{% else %}
+					"grouper": "{{0}}",
+				{% endif %}
+				{% if promos.percent > 0 %}
+					"percent": "{{promos.percent}}",
+				{% else %}
+					"percent": "{{0}}",
+				{% endif %}
+				"optativeOne": "{{promos.optativeOne}}",
+				"sent": "{{promos.sent}}",
+				"action": "{{promos.action}}",
+				"binCode": "{{promos.binCode}}",
+				"messagePsg": "{{promos.messagePsg}}"
+			},
+		{%- endfor -%}
+    ]
+}

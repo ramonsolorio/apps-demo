@@ -1,0 +1,69 @@
+{
+  "WMCode": "101",
+  "WMDesc": "Success",
+  "documents": [
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "ITM10MON50MCZ230310140200.json.gz",
+      "PVDocType": "ITM",
+      "PVStatus": "E",
+      "PVData": "UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "PRM10MON50MCZ231010180510.json.gz",
+      "PVDocType": "PRM",
+      "PVStatus": "E",
+      "PVData": "UEsFBgBBBBBBBBBBBBBBBBBBBBBBBB=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "PMC10MON50MCZ231010130210.json.gz",
+      "PVDocType": "PMC",
+      "PVStatus": "E",
+      "PVData": "UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "ILS10MON50MCZ231012120714.json.gz",
+      "PVDocType": "ILS",
+      "PVStatus": "E",
+      "PVData": "UEsFBgBBBBBBBBBBBBBBBBBBBBBBBB=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "TSC10MON50MCZ231105140210.json.gz",
+      "PVDocType": "TSC",
+      "PVStatus": "E",
+      "PVData": "UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "EXR10MON50MCZ231101245110.json.gz",
+      "PVDocType": "EXR",
+      "PVStatus": "E",
+      "PVData": "UEsFBgBBBBBBBBBBBBBBBBBBBBBBBB=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "ECA10MON50MCZ230425120840.json.gz",
+      "PVDocType": "ECA",
+      "PVStatus": "E",
+      "PVData": "UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "POD10MON50MCZ231012180712.json.gz",
+      "PVDocType": "POD",
+      "PVStatus": "E",
+      "PVData": "UEsFBgBBBBBBBBBBBBBBBBBBBBBBBB=="
+    },
+    {
+      "PVMime": "file/zip",
+      "PVDocName": "ASN10MON50MCZ230710140200.json.gz",
+      "PVDocType": "ASN",
+      "PVStatus": "E",
+      "PVData": "UEsFBgBBBBBBBBBBBBBBBBBBBBBBBB=="
+    }
+  ]
+}

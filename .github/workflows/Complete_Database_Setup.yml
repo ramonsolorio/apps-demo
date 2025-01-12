@@ -1,0 +1,106 @@
+name: Complete Cloud and Mock DataBase Setup
+
+on:
+  # push:
+  #   branches:
+  #     - puneeth
+  workflow_dispatch:
+    # Trigger on push to main branch; adjust as needed
+
+env:
+  ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'PROD' || github.ref == 'refs/heads/staging' && 'QA' || 'DEV' }}
+  CLOUD_SQL_PATH: 'src/DataFactory/Scripts/SQL/SQLAzureDevProd'
+  MOCK_SQL_PATH: 'src/DataFactory/Scripts/SQL/OracleOnPremMock'
+  CLOUD_SQL_CREATE_TABLE_SQL_PATH: 'src/DataFactory/Scripts/SQL/SQLAzureDevProd/Create_Promotion_SQL_Tables.sql'
+  CLOUD_SQL_CREATE_SPROC_SQL_PATH: 'src/DataFactory/Scripts/SQL/SQLAzureDevProd/SProcs'
+  MOCK_SQL_CREATE_SPROC_SQL_PATH: 'src/DataFactory/Scripts/SQL/OracleOnPremMock/SProcs'
+
+jobs:
+  clean-tables:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Azure SQL Managed Instance - Clean All Tables
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_PATH }}/Delete_Tables_IN_CLOUD.sql
+
+  create-tables:
+    runs-on: ubuntu-latest
+    needs: clean-tables
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Azure SQL Managed Instance - Create Cloud Tables
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_PATH }}/Create_All_Tables_Cloud.sql
+    
+    - name: Azure SQL Managed Instance - Create Mock Tables
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_MOCK', env.ENVIRONMENT)] }}
+        path: ${{ env.MOCK_SQL_PATH }}/Create_Oracle_Tables.sql
+
+  create-sprocs:
+    runs-on: ubuntu-latest
+    needs: create-tables
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Azure SQL Managed Instance - Create Stored Procedure - CreateGetPromomotionDataXmlSproc
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_CREATE_SPROC_SQL_PATH }}/CreateGetPromomotionDataXmlSproc.sql
+
+    - name: Azure SQL Managed Instance - Create Stored Procedure - CreateGetPromotionDataSproc
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_CREATE_SPROC_SQL_PATH }}/CreateGetPromotionDataSproc.sql
+
+    - name: Azure SQL Managed Instance - Create Stored Procedure - CreateGetPromotionStatusDataSproc
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_CREATE_SPROC_SQL_PATH }}/CreateGetPromotionStatusDataSproc.sql
+
+    - name: Azure SQL Managed Instance - Create Stored Procedure - CreateInsertPromotionDetailsIntoPromotionDetailsTable
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_CREATE_SPROC_SQL_PATH }}/CreateInsertPromotionDetailsIntoPromotionDetailsTable.sql
+      
+    - name: Azure SQL Managed Instance - Mock DB Store Proc
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_MOCK', env.ENVIRONMENT)] }}
+        path: ${{ env.MOCK_SQL_CREATE_SPROC_SQL_PATH }}/CreateGetXxfcMaestroDeCrsVData.sql
+
+  populate-data:
+    runs-on: ubuntu-latest
+    needs: create-sprocs
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Azure SQL Managed Instance - Populate Mastero Data
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_PATH }}/PopulateMaestroTable.sql
+    
+    - name: Azure SQL Managed Instance - Populate CFG Data
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets[format('{0}_AZURE_SQL_CONNECTION_STRING_CLOUD', env.ENVIRONMENT)] }}
+        path: ${{ env.CLOUD_SQL_PATH }}/Populate_SQL_Tables.sql
+
+    
