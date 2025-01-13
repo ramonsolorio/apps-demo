@@ -8,9 +8,7 @@ on:
       - main
   workflow_dispatch:
 
-
 env:
-  ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'PROD' || github.ref == 'refs/heads/staging' && 'QA' || 'DEV' }}
   DOTNET_VERSION: "8.0.x"
   PACKAGE_PATH: "src/AzureFunctions/OxxoPromotionFunctionApp"
   PROJECT_FILE: "OxxoPromotionFunctionApp.csproj"
@@ -19,7 +17,6 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,6 +38,9 @@ jobs:
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
         with:
-          app-name: ${{ vars[format('{0}_FUNCTION_APP_NAME', env.ENVIRONMENT)] }}
+          app-name: ${{ vars.FUNCTION_APP_NAME }}
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets[format('{0}_AZURE_FUNCTIONAPP_PUBLISH_PROFILE', env.ENVIRONMENT)] }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/staging' && 'qa' || 'development' }}
