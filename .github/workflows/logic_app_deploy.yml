@@ -64,3 +64,6 @@ jobs:
           app-name: ${{ vars.LOGIC_APP_NAME }}
           package: ${{ env.LOGIC_APP_PATH }}
           publish-profile: ${{ secrets.LOGIC_APP_PUBLISH_PROFILE }}
+      
+      - name: Print deployment logs  
+        run: cat ${GITHUB_WORKSPACE}/deploy.log || true  
