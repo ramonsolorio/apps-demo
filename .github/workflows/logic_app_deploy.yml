@@ -58,12 +58,12 @@ jobs:
       #     package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
       #     publish-profile: ${{ secrets.RULE_FUNCTION_APP_PUBLISH_PROFILE }}
 
-      - name: Deploy Logic App definition
-        uses: Azure/webapps-deploy@v2
-        with:
-          app-name: ${{ vars.LOGIC_APP_NAME }}
-          package: ${{ env.LOGIC_APP_PATH }}
-          publish-profile: ${{ secrets.LOGIC_APP_PUBLISH_PROFILE }}
+      #- name: Deploy Logic App definition
+      #  uses: Azure/webapps-deploy@v2
+      #  with:
+      #    app-name: ${{ vars.LOGIC_APP_NAME }}
+      #    package: ${{ env.LOGIC_APP_PATH }}
+      #    publish-profile: ${{ secrets.LOGIC_APP_PUBLISH_PROFILE }}
 
       - name: Azure Login
         uses: azure/login@v1
@@ -86,8 +86,10 @@ jobs:
           echo resourceGroupName=$resourceGroupName
           echo uri=$uri
           echo workflowName=$workflowName
-          workflowDetails=$(az rest --method post --uri $uri)
-          callbackURL=$(echo $workflowDetails | jq -r '.value')
+          
+          callbackURL=$(az rest --method post --uri $uri | jq -r '.value')
+
+          echo "Callback URL: $callbackURL"
 
           #Retreive the secret from keyvault and save in a variable to validate if exists
           currentSecretValue=$(az keyvault secret show --vault-name $keyvaultName --name $keyvaultSecretName --query value -o tsv)
