@@ -91,15 +91,9 @@ jobs:
 
           #Retreive the secret from keyvault and save in a variable to validate if exists
           currentSecretValue=$(az keyvault secret show --vault-name $keyvaultName --name $keyvaultSecretName --query value -o tsv)
-          if [ -z "$currentSecretValue" ]; then
-            echo "Secret $keyvaultSecretName does not exist in keyvault $keyvaultName creating it ..."
-            az keyvault secret set --vault-name $keyvaultName --name $keyvaultSecretName --value "$callbackURL" 
+          if [ -z "$currentSecretValue" ] || [ "$currentSecretValue" != "$callbackURL" ]; then
+            echo "Setting secret $keyvaultSecretName in keyvault $keyvaultName"
+            az keyvault secret set --vault-name $keyvaultName --name $keyvaultSecretName --value "$callbackURL"
           else
-            #Compare with the current value and update if different
-            if [ "$currentSecretValue" != "$callbackURL" ]; then
-              echo "Updating secret $keyvaultSecretName in keyvault $keyvaultName"
-              az keyvault secret set --vault-name $keyvaultName --name $keyvaultSecretName --value "$callbackURL" 
-            else
-              echo "Secret $keyvaultSecretName in keyvault $keyvaultName is up to date"
-            fi
+            echo "Secret $keyvaultSecretName in keyvault $keyvaultName is up to date"
           fi
