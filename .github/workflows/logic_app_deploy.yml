@@ -68,7 +68,9 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Update Workflow URL
         run: |
@@ -86,7 +88,7 @@ jobs:
           echo resourceGroupName=$resourceGroupName
           echo uri=$uri
           echo workflowName=$workflowName
-          
+
           callbackURL=$(az rest --method post --uri $uri | jq -r '.value')
 
           echo "Callback URL: $callbackURL"
