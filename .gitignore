@@ -28,3 +28,4 @@ bld/
 
 # Office
 ~$*
+*.code-workspace
