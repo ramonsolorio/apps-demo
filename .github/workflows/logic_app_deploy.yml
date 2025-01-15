@@ -75,7 +75,7 @@ jobs:
           # Get subscription from current context 
           subscription=$(az account show --query id -o tsv)          
           logicAppName='examplelogicapp123labs6'
-          workflowName='WF_PRM_StartProcessing'
+          workflowName='WF_PRM_AckNotification'
           # Get resource group given logic app name 
           #resourceGroupName=$(az resource show --name $logicAppName --resource-type "Microsoft.Logic/workflows" --query "resourceGroup" -o tsv)
           resourceGroupName='terraform-example-resource-group2'
