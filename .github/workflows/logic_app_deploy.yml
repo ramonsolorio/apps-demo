@@ -70,7 +70,7 @@ jobs:
       #     publish-profile: ${{ secrets.RULE_FUNCTION_APP_PUBLISH_PROFILE }}
 
       - name: Deploy Logic App definition
-        uses: Azure/webapps-deploy@v4
+        uses: Azure/webapps-deploy@v3
         with:
           app-name: ${{ vars.LOGIC_APP_NAME }}
           package: ${{ env.LOGIC_APP_PATH }}
