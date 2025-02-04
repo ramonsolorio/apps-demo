@@ -61,6 +61,18 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Get Access Token for Azure SQL
+        run: |
+          ACCESS_TOKEN=$(az account get-access-token --resource https://database.windows.net --query accessToken --output tsv)
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+
+      - name: Insert Data into Database
+        run: |
+          sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
+            -G -P $ACCESS_TOKEN \
+            -Q "SELECT 1;"
+
+
       # Uncomment and configure the following step if you want to deploy the Rule Engine to Azure Function App
       # - name: Deploy Rule Engine to Azure Function App
       #   uses: Azure/functions-action@v1
