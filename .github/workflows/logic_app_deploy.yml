@@ -65,8 +65,8 @@ jobs:
         uses: azure/sql-action@v2.3
         with:
           connection-string: > 
-            Server=tcp:${{ secrets.AZURE_SQL_SERVER }},1433;
-            Initial Catalog=${{ secrets.AZURE_SQL_DB }};
+            Server=tcp:${{ vars.AZURE_SQL_SERVER }},1433;
+            Initial Catalog=${{ vars.AZURE_SQL_DB }};
             Authentication=Active Directory Service Principal;
             Encrypt=True;
             TrustServerCertificate=False;
