@@ -77,7 +77,13 @@ jobs:
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
 
-      - name: Build Module
+      - name: Install-Module SqlServer
+        shell: pwsh
+        run: |
+          Install-Module -Name SqlServer -Force  
+          Install-Module -Name Az.Accounts -Force  
+
+      - name: Execute SQL Query
         shell: pwsh
         env:
           ACCESS_TOKEN: ${{ steps.key.outputs.ACCESS_TOKEN }}
@@ -88,8 +94,8 @@ jobs:
           Write-Host "PREVIOUS_TOKEN: $env:ACCESS_TOKEN"
           Write-Host "DIRECT_TOKEN: ${{ steps.key.outputs.ACCESS_TOKEN }}"
 
-          Install-Module -Name SqlServer -Force  
-          Install-Module -Name Az.Accounts -Force  
+          #Install-Module -Name SqlServer -Force  
+          #Install-Module -Name Az.Accounts -Force  
 
           #$token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
 
@@ -98,6 +104,9 @@ jobs:
                       -Database "${{ vars.AZURE_SQL_DB }}" `
                       -AccessToken "$env:ACCESS_TOKEN" `
                       -Query "SELECT 1"
+
+
+
 
 #      - name: Insert Data into Database
 #        run: |
