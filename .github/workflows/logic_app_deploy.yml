@@ -85,6 +85,11 @@ jobs:
           Write-Host "Building module..."
           #Write access token var
           Write-Host "Previous Token: $ACCESS_TOKEN"
+          Write-Host "PREVIOUS_TOKEN: $env:ACCESS_TOKEN"
+          Write-Host "DIRECT_TOKEN: ${{ steps.key.outputs.ACCESS_TOKEN }}"
+
+          Install-Module -Name SqlServer
+          Install-Module -Name Az.Accounts
 
           #$token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
           Write-Host "Token: $token"
