@@ -37,10 +37,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Build Module
-        shell: pwsh
-        run: |
-          Write-Host "Building module..."
+
 
       #      - name: Insert Data into Azure SQL
       #        uses: azure/sql-action@v2.3
@@ -77,6 +74,20 @@ jobs:
         run: |
           ACCESS_TOKEN=$(az account get-access-token --resource https://database.windows.net --output tsv | cut -f 1 | tr -d '\n' | iconv -f ascii -t UTF-16LE)
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+
+      - name: Build Module
+        shell: pwsh
+        run: |
+          Write-Host "Building module..."
+          #Write access token var
+          Write-Host "Previous Token: $ACCESS_TOKEN"
+
+          $token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
+          Write-Host "Token: $token"
+          Invoke-SqlCmd -ServerInstance "${{ vars.AZURE_SQL_SERVER }}" `
+                      -Database "${{ vars.AZURE_SQL_DB }}" `
+                      -AccessToken "$ACCESS_TOKEN" `
+                      -Query "SELECT 1"
 
       - name: Insert Data into Database
         run: |
