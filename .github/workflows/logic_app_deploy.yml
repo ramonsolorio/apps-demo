@@ -36,28 +36,50 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+#      - name: Insert Data into Azure SQL
+#        uses: azure/sql-action@v2.3
+#        with:
+#          connection-string: >             
+#            Server=tcp:${{ vars.AZURE_SQL_SERVER }},1433;
+#            Initial Catalog=${{ vars.AZURE_SQL_DB }};
+#            Authentication=Active Directory Service Principal;
+#            User ID=${{ secrets.AZURE_CLIENT_ID }}
+#            Encrypt=True;
+#            TrustServerCertificate=False;
+#          #client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+#          sql-query : "SELECT 1;"
+#          #sql-file: ./insert.sql
+#          #Server=<servername>;Initial Catalog=<database>;Authentication=Active Directory Service Principal; User ID=<user_id>; Password=<password>; Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+
+
       - name: Install SQLCMD
         run: |
           sudo apt-get update
           sudo apt-get install -y curl gnupg
           curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
           curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+
           sudo apt-get update
-          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
+
+          ls /opt
+          echo ====
+          ls /opt/mssql-tools/
           echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
           source ~/.bash_profile
-
-      - name: Get Access Token for Azure SQL
-        run: |
-          ACCESS_TOKEN=$(az account get-access-token --resource https://database.windows.net --query accessToken --output tsv)
-          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
-      
-      - name: Insert Data into Database
-        run: |
-          sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
-            -G -P $ACCESS_TOKEN \
-            -Q "SELECT 1;"
-
+#
+#      - name: Get Access Token for Azure SQL
+#        run: |
+#          ACCESS_TOKEN=$(az account get-access-token --resource https://database.windows.net --output tsv | cut -f 1 | tr -d '\n' | iconv -f ascii -t UTF-16LE)
+#          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+#      
+#      - name: Insert Data into Database
+#        run: |
+#          sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
+#            -G -P $ACCESS_TOKEN \
+#            -Q "SELECT 1;"
+#
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -85,21 +107,6 @@ jobs:
 
 
       
-      #- name: Insert Data into Azure SQL
-      #  uses: azure/sql-action@v2.3
-      #  with:
-      #    connection-string: >             
-      #      Server=tcp:${{ vars.AZURE_SQL_SERVER }},1433;
-      #      Initial Catalog=${{ vars.AZURE_SQL_DB }};
-      #      Authentication=Active Directory Service Principal;
-      #      User ID=${{ secrets.AZURE_CLIENT_ID }}
-      #      Encrypt=True;
-      #      TrustServerCertificate=False;
-      #    #client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-      #    sql-query : "SELECT 1;"
-      #    #sql-file: ./insert.sql
-      #    #Server=<servername>;Initial Catalog=<database>;Authentication=Active Directory Service Principal; User ID=<user_id>; Password=<password>; Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-
 
 
 
