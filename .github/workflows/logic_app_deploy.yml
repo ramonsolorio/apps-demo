@@ -88,23 +88,12 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ steps.key.outputs.ACCESS_TOKEN }}
         run: |
-          Write-Host "Building module..."
-          #Write access token var
-          Write-Host "Previous Token: $ACCESS_TOKEN"
-          Write-Host "PREVIOUS_TOKEN: $env:ACCESS_TOKEN"
-          Write-Host "DIRECT_TOKEN: ${{ steps.key.outputs.ACCESS_TOKEN }}"
+          Write-Host "Executing query... "
 
-          #Install-Module -Name SqlServer -Force  
-          #Install-Module -Name Az.Accounts -Force  
-
-          #$token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
-
-          Write-Host "Token: $token"
           Invoke-SqlCmd -ServerInstance "${{ vars.AZURE_SQL_SERVER }}" `
                       -Database "${{ vars.AZURE_SQL_DB }}" `
-                      -AccessToken "$env:ACCESS_TOKEN" `
+                      -AccessToken "${{ steps.key.outputs.ACCESS_TOKEN }}" `
                       -Query "SELECT 1"
-
 
 
 
