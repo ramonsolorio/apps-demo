@@ -76,7 +76,7 @@ jobs:
       - name: Insert Data into Database
         run: |
           /opt/mssql-tools18/bin/sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
-          --authentication-method ActiveDirectoryServicePrincipal -P $ACCESS_TOKEN \
+          -G \
           -Q "SELECT 1;"
 
           sqlcmd -S "$SERVER" -U "$USERNAME" -d "$DATABASE" 
