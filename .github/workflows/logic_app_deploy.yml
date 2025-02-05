@@ -65,21 +65,21 @@ jobs:
 
           ls /opt
           echo ====
-          ls /opt/mssql-tools/
-          echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+          ls /opt/mssql-tools18/
+          echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bash_profile
           source ~/.bash_profile
-#
-#      - name: Get Access Token for Azure SQL
-#        run: |
-#          ACCESS_TOKEN=$(az account get-access-token --resource https://database.windows.net --output tsv | cut -f 1 | tr -d '\n' | iconv -f ascii -t UTF-16LE)
-#          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
-#      
-#      - name: Insert Data into Database
-#        run: |
-#          sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
-#            -G -P $ACCESS_TOKEN \
-#            -Q "SELECT 1;"
-#
+
+      - name: Get Access Token for Azure SQL
+        run: |
+          ACCESS_TOKEN=$(az account get-access-token --resource https://database.windows.net --output tsv | cut -f 1 | tr -d '\n' | iconv -f ascii -t UTF-16LE)
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+      
+      - name: Insert Data into Database
+        run: |
+          sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
+            -G -P $ACCESS_TOKEN \
+            -Q "SELECT 1;"
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
