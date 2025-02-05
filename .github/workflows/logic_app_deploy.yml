@@ -19,6 +19,7 @@ env:
   RULE_ENGINE_PROJECT_FILE: "WF_PRM_PromoFunction.csproj"
   AZURE_FUNCTIONAPP_PACKAGE_PATH: "./publish"
   LOGIC_APP_NAME: ${{ vars.LOGIC_APP_NAME }}
+  CMD_PREFIX: "/opt/mssql-tools18/bin"
 
 jobs:
   deploy:
@@ -36,22 +37,20 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-#      - name: Insert Data into Azure SQL
-#        uses: azure/sql-action@v2.3
-#        with:
-#          connection-string: >             
-#            Server=tcp:${{ vars.AZURE_SQL_SERVER }},1433;
-#            Initial Catalog=${{ vars.AZURE_SQL_DB }};
-#            Authentication=Active Directory Service Principal;
-#            User ID=${{ secrets.AZURE_CLIENT_ID }}
-#            Encrypt=True;
-#            TrustServerCertificate=False;
-#          #client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-#          sql-query : "SELECT 1;"
-#          #sql-file: ./insert.sql
-#          #Server=<servername>;Initial Catalog=<database>;Authentication=Active Directory Service Principal; User ID=<user_id>; Password=<password>; Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-
-
+      #      - name: Insert Data into Azure SQL
+      #        uses: azure/sql-action@v2.3
+      #        with:
+      #          connection-string: >
+      #            Server=tcp:${{ vars.AZURE_SQL_SERVER }},1433;
+      #            Initial Catalog=${{ vars.AZURE_SQL_DB }};
+      #            Authentication=Active Directory Service Principal;
+      #            User ID=${{ secrets.AZURE_CLIENT_ID }}
+      #            Encrypt=True;
+      #            TrustServerCertificate=False;
+      #          #client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      #          sql-query : "SELECT 1;"
+      #          #sql-file: ./insert.sql
+      #          #Server=<servername>;Initial Catalog=<database>;Authentication=Active Directory Service Principal; User ID=<user_id>; Password=<password>; Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 
       - name: Install SQLCMD
         run: |
@@ -65,7 +64,7 @@ jobs:
 
           ls /opt
           echo ====
-          ls /opt/mssql-tools18/
+          ls /opt/mssql-tools18/bin
           echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bash_profile
           source ~/.bash_profile
 
@@ -73,12 +72,12 @@ jobs:
         run: |
           ACCESS_TOKEN=$(az account get-access-token --resource https://database.windows.net --output tsv | cut -f 1 | tr -d '\n' | iconv -f ascii -t UTF-16LE)
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
-      
+
       - name: Insert Data into Database
         run: |
-          sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
-            -G -P $ACCESS_TOKEN \
-            -Q "SELECT 1;"
+          /opt/mssql-tools18/bin/sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} \
+          -G -P $ACCESS_TOKEN \
+          -Q "SELECT 1;"
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
@@ -105,12 +104,6 @@ jobs:
       - name: Publish Rule Engine
         run: dotnet publish ${{ env.RULE_ENGINE_PROJECT_PATH }}/${{ env.RULE_ENGINE_PROJECT_FILE }} --configuration Release --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
-
-      
-
-
-
-
       # Uncomment and configure the following step if you want to deploy the Rule Engine to Azure Function App
       # - name: Deploy Rule Engine to Azure Function App
       #   uses: Azure/functions-action@v1
@@ -126,10 +119,8 @@ jobs:
           package: ${{ env.LOGIC_APP_PATH }}
           #publish-profile: ${{ secrets.LOGIC_APP_PUBLISH_PROFILE }}
 
-
-
-      - name: Update Workflow URLs  
-        run: |  
+      - name: Update Workflow URLs
+        run: |
           subscription='${{ secrets.AZURE_SUBSCRIPTION_ID }}'  
           resourceGroupName='${{ vars.RESOURCE_GROUP_NAME }}'  
           logicAppName='${{ vars.LOGIC_APP_NAME }}'  
@@ -142,12 +133,12 @@ jobs:
             ["WF_PRM_AnotherWorkflow"]="WF-PRM-AnotherWorkflow-URL"  
             # Agregar más workflows y nombres de secretos según sea necesario  
           )  
-        
+
           for workflowName in "${!workflows[@]}"; do  
             keyvaultSecretName=${workflows[$workflowName]}  
             uri="https://management.azure.com/subscriptions/$subscription/resourceGroups/$resourceGroupName/providers/Microsoft.Web/sites/$logicAppName/hostruntime/runtime/webhooks/workflow/api/management/workflows/$workflowName/triggers/When_a_HTTP_request_is_received/listCallbackUrl?api-version=2018-11-01"  
             callbackURL=$(az rest --method post --uri $uri | jq -r '.value')  
-        
+
             # Retreive the secret from keyvault and save in a variable to validate if exists  
             currentSecretValue=$(az keyvault secret show --vault-name $keyvaultName --name $keyvaultSecretName --query value -o tsv)  
             if [ -z "$currentSecretValue" ] || [ "$currentSecretValue" != "$callbackURL" ]; then  
@@ -156,4 +147,4 @@ jobs:
             else  
               echo "Secret $keyvaultSecretName in keyvault $keyvaultName is up to date"  
             fi  
-          done  
+          done
