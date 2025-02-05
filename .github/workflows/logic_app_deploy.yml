@@ -37,6 +37,11 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Build Module
+        shell: pwsh
+        run: |
+          Write-Host "Building module..."
+
       #      - name: Insert Data into Azure SQL
       #        uses: azure/sql-action@v2.3
       #        with:
@@ -77,7 +82,7 @@ jobs:
         run: |
           /opt/mssql-tools18/bin/sqlcmd -?
           echo "======"
-          /opt/mssql-tools18/bin/sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} -G -P 'xxxxxx' -Q 'SELECT 1;'  
+          /opt/mssql-tools18/bin/sqlcmd -S ${{ vars.AZURE_SQL_SERVER }} -d ${{ vars.AZURE_SQL_DB }} -G -P 'xxxxxx' -Q 'SELECT 1'  
           echo "======"
           #sqlcmd -S "$SERVER" -U "$USERNAME" -d "$DATABASE" 
 
