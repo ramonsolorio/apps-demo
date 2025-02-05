@@ -95,7 +95,7 @@ jobs:
           Write-Host "Token: $token"
           Invoke-SqlCmd -ServerInstance "${{ vars.AZURE_SQL_SERVER }}" `
                       -Database "${{ vars.AZURE_SQL_DB }}" `
-                      -AccessToken "$ACCESS_TOKEN" `
+                      -AccessToken "$env:ACCESS_TOKEN" `
                       -Query "SELECT 1"
 
       - name: Insert Data into Database
